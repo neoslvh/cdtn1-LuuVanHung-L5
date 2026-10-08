@@ -10,7 +10,7 @@
 | `POST` | `/api/stock-receipts` | Ghi nhận nhập linh kiện, tăng tồn kho tại trung tâm. | US2 |
 | `GET` | `/api/parts/{part_id}/availability?requested_quantity={quantity}` | Kiểm tra số lượng linh kiện có đáp ứng nhu cầu sử dụng. | US3 |
 | `POST` | `/api/tickets/{ticket_id}/part-issues` | Xuất một hoặc nhiều linh kiện cho phiếu bảo hành. | US4 |
-| `GET` | `/api/stock-alerts?page={page}&size={size}` | Xem cảnh báo và danh sách linh kiện tồn dưới ngưỡng. | US5, US8 |
+| `GET` | `/api/stock-alerts?page={page}&size={size}` | Xem cảnh báo và danh sách linh kiện tồn dưới ngưỡng. | US5 |
 | `GET` | `/api/part-transactions?part_id={part_id}&page={page}&size={size}` | Xem lịch sử nhập — xuất của linh kiện. | US6 |
 | `GET` | `/api/tickets/{ticket_id}/parts` | Xem linh kiện đã xuất cho phiếu bảo hành. | US7 |
 
@@ -286,7 +286,7 @@ Quy định này áp dụng QT-14. Endpoint xuất linh kiện áp dụng thêm 
 
 ## Tự kiểm trước khi nộp BT1
 
-- [x] Mỗi endpoint nối được tới ít nhất một User Story trong SRS: US2, US4 hoặc US5.
+- [x] Mỗi endpoint nối được tới ít nhất một User Story trong SRS (US1–US7); các endpoint MUST có đặc tả request, response thành công, lỗi và validation chi tiết.
 - [x] Mỗi endpoint có một response thành công và ít nhất hai response lỗi.
 - [x] Trường request dùng `snake_case` và bám các thực thể `part`, `part_stock`, `part_transaction`, `ticket_part`, `ticket`.
 - [x] Không có endpoint không phục vụ User Story.
