@@ -14,13 +14,14 @@ Mekong Mobile có 6 trung tâm bảo hành. Tồn kho linh kiện thay thế hi�
 
 Luồng L5 quản lý tồn kho linh kiện theo từng trung tâm: quản lý trung tâm ghi nhận nhập kho; kỹ thuật viên kiểm tra và xuất linh kiện cho phiếu bảo hành; hệ thống cập nhật tồn, cảnh báo tồn thấp và lưu lịch sử giao dịch.
 
-Các thực thể liên quan là `part`, `part_stock`, `part_transaction`, `ticket_part`, `ticket` và `ticket_status_log`.
+Các thực thể dữ liệu thuộc phạm vi L5 là `part`, `part_stock`, `part_transaction` và `ticket_part`. Phiếu bảo hành đã tồn tại từ luồng khác; L5 chỉ dùng `ticket_id` để liên kết linh kiện đã xuất, không quản lý dữ liệu hay vòng đời trạng thái của phiếu.
 
 ### 1.3. Ngoài phạm vi (WON'T)
 
 Prototype này chủ ý không thực hiện:
 
 - Tiếp nhận, tạo mới hoặc đóng phiếu bảo hành.
+- Cập nhật trạng thái hoặc lưu lịch sử trạng thái của phiếu bảo hành.
 - Phân công kỹ thuật viên, đặt lịch hẹn hoặc quản lý hạn cam kết.
 - Quản lý nhà cung cấp, đặt mua linh kiện, vận chuyển hoặc chuyển kho giữa các trung tâm.
 - Quản lý bán hàng, khách hàng, khảo sát hài lòng và báo cáo doanh thu.
@@ -34,7 +35,6 @@ Prototype này chủ ý không thực hiện:
 | Giao dịch nhập | Giao dịch làm tăng số lượng tồn của linh kiện. |
 | Giao dịch xuất | Giao dịch sử dụng linh kiện cho phiếu bảo hành và làm giảm tồn kho. |
 | Phiếu bảo hành | Yêu cầu bảo hành hoặc sửa chữa có mã duy nhất và vòng đời trạng thái. |
-| Trạng thái phiếu | Vị trí của phiếu trong vòng đời: MỚI → ĐÃ PHÂN CÔNG → ĐANG XỬ LÝ → CHỜ LINH KIỆN → HOÀN TẤT → ĐÃ ĐÓNG. |
 | `quantity` | Số lượng tồn hiện tại trong `part_stock`. |
 | `min_threshold` | Ngưỡng cảnh báo tồn thấp trong `part_stock`. |
 
@@ -55,15 +55,14 @@ Prototype này chủ ý không thực hiện:
 
 **FR3 — Kiểm tra tồn trước khi sử dụng.** Hệ thống phải cho phép kỹ thuật viên kiểm tra `quantity` của linh kiện cần dùng. Nếu tồn nhỏ hơn số lượng cần dùng, hệ thống phải thông báo không đủ linh kiện để xuất.
 
-**FR4 — Xuất linh kiện cho phiếu bảo hành.** Hệ thống phải cho phép kỹ thuật viên xuất một hoặc nhiều linh kiện cho một phiếu bảo hành. Khi hợp lệ, hệ thống phải lưu giao dịch xuất, giảm `quantity` và lưu liên kết linh kiện với phiếu. Nếu không đủ tồn, hệ thống phải từ chối giao dịch, giữ nguyên tồn và chuyển phiếu sang trạng thái CHỜ LINH KIỆN theo vòng đời hợp lệ.
+**FR4 — Xuất linh kiện cho phiếu bảo hành.** Hệ thống phải cho phép kỹ thuật viên xuất một hoặc nhiều linh kiện cho một phiếu bảo hành. Khi hợp lệ, hệ thống phải lưu giao dịch xuất, giảm `quantity` và lưu liên kết linh kiện với phiếu. Nếu không đủ tồn, hệ thống phải từ chối giao dịch, giữ nguyên tồn và thông báo không đủ linh kiện để xuất.
 
-**FR5 — Cảnh báo tồn kho thấp.** Sau mỗi giao dịch làm thay đổi tồn, hệ thống phải kiểm tra `quantity`. Khi `quantity < min_threshold`, hệ thống phải hiển thị cảnh báo tồn thấp cho linh kiện tương ứng.
+**FR5 — Xem cảnh báo tồn kho thấp.** Sau mỗi giao dịch làm thay đổi tồn, hệ thống phải kiểm tra `quantity`. Khi `quantity < min_threshold`, hệ thống phải tạo cảnh báo; quản lý trung tâm phải xem được danh sách linh kiện dưới ngưỡng để ưu tiên bổ sung.
 
 **FR6 — Xem lịch sử nhập — xuất.** Hệ thống phải cho phép quản lý trung tâm xem lịch sử biến động tồn của từng linh kiện, gồm linh kiện, loại giao dịch, số lượng, thời điểm và phiếu bảo hành liên quan nếu là giao dịch xuất.
 
 **FR7 — Xem linh kiện đã xuất cho phiếu bảo hành.** Hệ thống phải cho phép kỹ thuật viên xem danh sách linh kiện đã ghi nhận sử dụng cho một phiếu bảo hành.
 
-**FR8 — Xem danh sách linh kiện dưới ngưỡng.** Hệ thống phải cho phép quản lý trung tâm xem các linh kiện có `quantity < min_threshold` để ưu tiên bổ sung.
 
 ### 3.2. User Story và MoSCoW
 
@@ -76,7 +75,6 @@ Prototype này chủ ý không thực hiện:
 | US5 | Là quản lý trung tâm, tôi muốn được cảnh báo khi tồn kho của một linh kiện thấp hơn ngưỡng tối thiểu để chủ động bổ sung trước khi hết hàng. | MUST |
 | US6 | Là quản lý trung tâm, tôi muốn xem lịch sử nhập — xuất của từng linh kiện để theo dõi nguyên nhân biến động tồn kho. | COULD |
 | US7 | Là kỹ thuật viên, tôi muốn xem danh sách linh kiện đã xuất cho một phiếu bảo hành để biết những linh kiện nào đã được sử dụng trong quá trình sửa chữa. | SHOULD |
-| US8 | Là quản lý trung tâm, tôi muốn xem danh sách các linh kiện có số lượng tồn thấp hơn ngưỡng tối thiểu để biết những linh kiện cần ưu tiên bổ sung. | SHOULD |
 
 ### 3.3. Acceptance Criteria cho User Story MUST
 
@@ -112,7 +110,7 @@ Prototype này chủ ý không thực hiện:
 
 **GIVEN** số lượng cần xuất lớn hơn số lượng tồn hiện tại<br>
 **WHEN** kỹ thuật viên xác nhận xuất linh kiện<br>
-**THEN** hệ thống từ chối giao dịch, giữ nguyên số lượng tồn, chuyển phiếu sang CHỜ LINH KIỆN và thông báo không đủ linh kiện để xuất.
+**THEN** hệ thống từ chối giao dịch, giữ nguyên số lượng tồn và thông báo không đủ linh kiện để xuất.
 
 **AC4.3 — Tồn sau xuất xuống dưới ngưỡng**
 
@@ -146,7 +144,7 @@ Prototype này chủ ý không thực hiện:
 
 **Actor chính:** Kỹ thuật viên<br>
 **Mục tiêu:** Ghi nhận linh kiện đã sử dụng cho một phiếu bảo hành để theo dõi chính xác việc sử dụng linh kiện và cập nhật tồn kho.<br>
-**Điều kiện trước:** Kỹ thuật viên đã đăng nhập; phiếu bảo hành tồn tại, thuộc trung tâm kỹ thuật viên làm việc và linh kiện cần xuất đã được chọn.<br>
+**Điều kiện trước:** Kỹ thuật viên đã đăng nhập; nhận được `ticket_id` của phiếu bảo hành thuộc trung tâm kỹ thuật viên làm việc và linh kiện cần xuất đã được chọn. Dữ liệu, trạng thái và vòng đời của phiếu thuộc luồng ngoài phạm vi L5.<br>
 **Điều kiện sau — thành công:** Giao dịch xuất được lưu; số lượng tồn được giảm tương ứng; linh kiện được liên kết với phiếu bảo hành; cảnh báo tồn thấp được tạo nếu cần.<br>
 **Điều kiện sau — thất bại:** Không có giao dịch xuất nào được lưu và tồn kho không thay đổi.<br>
 **Liên quan:** US3, US4, US5 | **Mức ưu tiên:** MUST
@@ -173,7 +171,6 @@ Prototype này chủ ý không thực hiện:
 **6a. Số lượng cần xuất lớn hơn tồn hiện tại**
 
 → Hệ thống từ chối giao dịch, giữ nguyên tồn kho và thông báo không đủ linh kiện để xuất.<br>
-→ Hệ thống chuyển phiếu bảo hành sang trạng thái **CHỜ LINH KIỆN** theo vòng đời trạng thái hợp lệ.<br>
 → Kết thúc use case.
 
 **7a. Lỗi khi lưu giao dịch xuất hoặc cập nhật tồn kho**
@@ -183,7 +180,7 @@ Prototype này chủ ý không thực hiện:
 
 ### 3.5. Use Case Diagram
 
-Sơ đồ gốc được lưu tại [L5_usecasediagram.drawio](L5_usecasediagram.drawio). Sơ đồ có ranh giới **Hệ thống quản lý kho linh kiện thay thế**, hai actor và tám use case dưới đây.
+Sơ đồ gốc được lưu tại [usecase.drawio](usecase.drawio). Sơ đồ có ranh giới **Hệ thống quản lý kho linh kiện thay thế**, hai actor và tám use case dưới đây.
 
 | Actor | Use Case | Mục đích |
 | --- | --- | --- |
@@ -191,7 +188,6 @@ Sơ đồ gốc được lưu tại [L5_usecasediagram.drawio](L5_usecasediagram
 | Quản lý trung tâm | UC2 — Ghi nhận nhập linh kiện | Ghi nhận số lượng linh kiện nhập và tăng tồn kho. |
 | Quản lý trung tâm | UC5 — Xem cảnh báo tồn thấp | Xem cảnh báo cho linh kiện có `quantity < min_threshold`. |
 | Quản lý trung tâm | UC6 — Xem lịch sử nhập — xuất | Xem các giao dịch làm biến động tồn kho. |
-| Quản lý trung tâm | UC8 — Xem danh sách linh kiện dưới ngưỡng | Xác định linh kiện cần ưu tiên bổ sung. |
 | Kỹ thuật viên | UC3 — Kiểm tra tồn kho linh kiện | Kiểm tra linh kiện có đủ để dùng cho phiếu bảo hành hay không. |
 | Kỹ thuật viên | UC4 — Xuất linh kiện cho phiếu bảo hành | Ghi nhận linh kiện sử dụng và cập nhật tồn kho. |
 | Kỹ thuật viên | UC7 — Xem linh kiện đã xuất cho phiếu bảo hành | Truy vết linh kiện đã sử dụng khi sửa chữa. |
@@ -206,6 +202,8 @@ Quan hệ `<<include>>`: UC4 bao gồm UC3, vì hệ thống luôn phải kiểm
 
 **NFR3 — Phân quyền dữ liệu.** 100% yêu cầu truy cập dữ liệu kho phải bị giới hạn theo trung tâm của người dùng; người dùng không được xem hoặc thao tác dữ liệu của trung tâm khác.
 
+**NFR4 — Hiệu năng tra cứu tồn kho.** Ít nhất 95% yêu cầu xem tồn kho, danh sách tồn thấp và lịch sử nhập - xuất phải phản hồi trong <= 2 giây với khoảng 10.000 bản ghi thử nghiệm trên môi trường cục bộ.
+
 ## 5. Ràng buộc và quy tắc nghiệp vụ
 
 **BR1 — Tồn kho không âm.** `part_stock.quantity` luôn phải thỏa `quantity >= 0`.
@@ -214,21 +212,18 @@ Quan hệ `<<include>>`: UC4 bao gồm UC3, vì hệ thống luôn phải kiểm
 
 **BR3 — Cảnh báo tồn thấp (QT-09).** Khi `quantity < min_threshold`, hệ thống phải cảnh báo cho quản lý trung tâm.
 
-**BR4 — Vòng đời trạng thái phiếu (QT-06).** Phiếu chỉ được chuyển trạng thái theo vòng đời. Khi thiếu linh kiện, phiếu chuyển sang CHỜ LINH KIỆN; không được chuyển ngược trạng thái và mọi lần chuyển phải lưu trong `ticket_status_log`.
+**BR4 — Dữ liệu theo trung tâm (QT-14).** Kỹ thuật viên chỉ xem dữ liệu của trung tâm mình làm việc; quản lý trung tâm chỉ xem dữ liệu của đơn vị mình phụ trách.
 
-**BR5 — Dữ liệu theo trung tâm (QT-14).** Kỹ thuật viên chỉ xem dữ liệu của trung tâm mình làm việc; quản lý trung tâm chỉ xem dữ liệu của đơn vị mình phụ trách.
-
-**BR6 — Truy vết linh kiện đã sử dụng.** Mỗi linh kiện xuất cho phiếu bảo hành phải được lưu liên kết trong `ticket_part` để truy vết sau này.
+**BR5 — Truy vết linh kiện đã sử dụng.** Mỗi linh kiện xuất cho phiếu bảo hành phải được lưu liên kết trong `ticket_part` để truy vết sau này.
 
 ## 6. Bảng truy vết yêu cầu
 
-| Mã FR | Yêu cầu chức năng | User Story | Use Case | MoSCoW | Test case (BT3) |
+| Mã FR | Yêu cầu chức năng | User Story | Use Case | MoSCoW | Bảng dữ liệu | Màn hình | Test case (BT3) |
 | --- | --- | --- | --- | --- | --- |
-| FR1 | Xem tồn kho linh kiện | US1 | UC1 — Xem tồn kho linh kiện | SHOULD | — |
-| FR2 | Ghi nhận nhập linh kiện | US2 | UC2 — Ghi nhận nhập linh kiện | MUST | — |
-| FR3 | Kiểm tra tồn trước khi sử dụng | US3 | UC3 — Kiểm tra tồn kho | SHOULD | — |
-| FR4 | Xuất linh kiện cho phiếu bảo hành | US4 | UC4 — Xuất linh kiện cho phiếu bảo hành | MUST | — |
-| FR5 | Cảnh báo tồn kho thấp | US5 | UC5 — Xem cảnh báo tồn thấp | MUST | — |
-| FR6 | Xem lịch sử nhập — xuất | US6 | UC6 — Xem lịch sử nhập — xuất | COULD | — |
-| FR7 | Xem linh kiện đã xuất cho phiếu bảo hành | US7 | UC7 — Xem linh kiện đã xuất cho phiếu bảo hành | SHOULD | — |
-| FR8 | Xem danh sách linh kiện dưới ngưỡng | US8 | UC8 — Xem linh kiện dưới ngưỡng | SHOULD | — |
+| FR1 | Xem tồn kho linh kiện | US1 | UC1 — Xem tồn kho linh kiện | SHOULD | `part`, `part_stock` | M1 — Danh sách tồn kho | — |
+| FR2 | Ghi nhận nhập linh kiện | US2 | UC2 — Ghi nhận nhập linh kiện | MUST | `part_stock`, `part_transaction` | M2 — Nhập linh kiện | — |
+| FR3 | Kiểm tra tồn trước khi sử dụng | US3 | UC3 — Kiểm tra tồn kho | SHOULD | `part`, `part_stock` | M3 — Xuất linh kiện cho phiếu | — |
+| FR4 | Xuất linh kiện cho phiếu bảo hành | US4 | UC4 — Xuất linh kiện cho phiếu bảo hành | MUST | `part_stock`, `part_transaction`, `ticket_part` | M3 — Xuất linh kiện cho phiếu | — |
+| FR5 | Xem cảnh báo tồn kho thấp | US5 | UC5 — Xem cảnh báo tồn thấp | MUST | `part`, `part_stock` | M1 — Danh sách tồn kho | — |
+| FR6 | Xem lịch sử nhập — xuất | US6 | UC6 — Xem lịch sử nhập — xuất | COULD | `part`, `part_transaction`, `ticket_part` | M1 — Danh sách tồn kho | — |
+| FR7 | Xem linh kiện đã xuất cho phiếu bảo hành | US7 | UC7 — Xem linh kiện đã xuất cho phiếu bảo hành | SHOULD | `part`, `ticket_part` | M3 — Xuất linh kiện cho phiếu | — |
