@@ -1,0 +1,118 @@
+<mxfile host="app.diagrams.net" agent="ChatGPT" compressed="false">
+  <diagram id="d27e696e" name="Page-1">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1400" pageHeight="980" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;strokeColor=none;fillColor=none;fontFamily=Times New Roman;" value="\" vertex="1">
+          <mxGeometry height="45" width="1060" x="170" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="12" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1.6;fillColor=#f8f9fa;strokeColor=#5b6b7a;fontSize=18;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="125" width="1060" x="170" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="112" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1.3;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=18;fontStyle=1;fontFamily=Times New Roman;" value="LỚP TRUY CẬP DỮ LIỆU&lt;br&gt;&lt;span&gt;Repository&lt;/span&gt;" vertex="1">
+          <mxGeometry height="80" width="190" x="185" y="498" as="geometry" />
+        </mxCell>
+        <mxCell id="13" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1.6;fillColor=#f8f9fa;strokeColor=#5b6b7a;fontSize=18;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="125" width="1060" x="170" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="113" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1.3;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=18;fontStyle=1;fontFamily=Times New Roman;" value="&lt;font&gt;&lt;b&gt;LỚP LƯU TRỮ&lt;/b&gt;&lt;br&gt;&lt;span&gt;PostgreSQL&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="190" x="185" y="678" as="geometry" />
+        </mxCell>
+        <mxCell id="40" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;fontSize=18;spacing=6;fontFamily=Times New Roman;" value="&lt;b&gt;PartRepository&lt;/b&gt;" vertex="1">
+          <mxGeometry height="65" width="170" x="405" y="505" as="geometry" />
+        </mxCell>
+        <mxCell id="41" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;fontSize=18;spacing=6;fontFamily=Times New Roman;" value="&lt;b&gt;StockRepository&lt;/b&gt;" vertex="1">
+          <mxGeometry height="65" width="170" x="590" y="505" as="geometry" />
+        </mxCell>
+        <mxCell id="42" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;fontSize=18;spacing=6;fontFamily=Times New Roman;" value="&lt;b&gt;TransactionRepository&lt;/b&gt;" vertex="1">
+          <mxGeometry height="65" width="190" x="775" y="505" as="geometry" />
+        </mxCell>
+        <mxCell id="43" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;fontSize=18;spacing=6;fontFamily=Times New Roman;" value="&lt;b&gt;TicketPartRepository&lt;/b&gt;" vertex="1">
+          <mxGeometry height="65" width="180" x="980" y="505" as="geometry" />
+        </mxCell>
+        <mxCell id="50" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;fontSize=18;spacing=6;fontFamily=Times New Roman;" value="&lt;b&gt;part&lt;/b&gt;" vertex="1">
+          <mxGeometry height="55" width="120" x="405" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="51" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;fontSize=18;spacing=6;fontFamily=Times New Roman;" value="&lt;b&gt;part_stock&lt;/b&gt;" vertex="1">
+          <mxGeometry height="55" width="145" x="540" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="52" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;fontSize=18;spacing=6;fontFamily=Times New Roman;" value="&lt;b&gt;part_transaction&lt;/b&gt;" vertex="1">
+          <mxGeometry height="55" width="175" x="700" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="53" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;fontSize=18;spacing=6;fontFamily=Times New Roman;" value="&lt;b&gt;ticket&lt;/b&gt;" vertex="1">
+          <mxGeometry height="55" width="120" x="890" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="54" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;fontSize=18;spacing=6;fontFamily=Times New Roman;" value="&lt;b&gt;ticket_part&lt;/b&gt;" vertex="1">
+          <mxGeometry height="55" width="145" x="1025" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="62" edge="1" parent="1" source="42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1.6;fontSize=18;fontFamily=Times New Roman;" target="52" value="SQL">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="70" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=18;fontFamily=Times New Roman;" value="&lt;b&gt;Auth Context&lt;/b&gt;&lt;br&gt;role + center_id" vertex="1">
+          <mxGeometry height="65" width="120" x="20" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="71" edge="1" parent="1" source="70" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;endArrow=open;strokeColor=#b8860b;fontSize=18;fontFamily=Times New Roman;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="11" value="phân quyền theo trung tâm">
+          <mxGeometry relative="1" x="0.3047" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="142.5" y="277.5" as="sourcePoint" />
+            <mxPoint x="867.5" y="325" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="80" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffaf0;strokeColor=#d6b656;fontSize=18;spacing=8;fontFamily=Times New Roman;align=left;" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Lập luận kiến trúc&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;1) Vì &lt;/span&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;NFR1&lt;/b&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt; yêu cầu 100% giao dịch xuất không làm tồn âm, chọn kiểm tra tồn +&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;khóa dòng hoặc cập nhật có điều kiện&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;+ transaction PostgreSQL; đánh đổi: giữ transaction lâu hơn khi đồng thời.&lt;/span&gt;&lt;/div&gt;&lt;br&gt;2) Vì &lt;b&gt;NFR2&lt;/b&gt; yêu cầu 100% giao dịch lỗi phải rollback hoàn toàn, tôi đặt cập nhật &lt;code dir=&quot;ltr&quot;&gt;part_stock&lt;/code&gt;, ghi &lt;code dir=&quot;ltr&quot;&gt;part_transaction&lt;/code&gt; và lưu &lt;code dir=&quot;ltr&quot;&gt;ticket_part&lt;/code&gt; trong cùng transaction; đánh đổi là logic Service phức tạp hơn.&lt;div&gt;&lt;br&gt;3) Vì &lt;b&gt;NFR3&lt;/b&gt; yêu cầu 100% truy cập đúng trung tâm, chọn lấy &lt;code&gt;center_id&lt;/code&gt; từ Auth Context và lọc ở Service/Repository; đánh đổi: mọi truy vấn kho phải kèm điều kiện trung tâm.&lt;br&gt;&lt;br&gt;4) Vì &lt;b&gt;NFR4&lt;/b&gt; yêu cầu ≥95% truy vấn ≤2 giây với ~10.000 bản ghi, chọn phân trang + index; đánh đổi: tăng chi phí ghi/cập nhật index.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="250" width="1080" x="165" y="810" as="geometry" />
+        </mxCell>
+        <mxCell id="jh8YW1rS6jgoNghJCkyT-113" connectable="0" parent="1" style="group;fontFamily=Times New Roman;fontSize=18;" value="" vertex="1">
+          <mxGeometry height="125" width="1060" x="160" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="10" parent="jh8YW1rS6jgoNghJCkyT-113" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1.6;fillColor=#f8f9fa;strokeColor=#5b6b7a;fontSize=18;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="125" width="1060" as="geometry" />
+        </mxCell>
+        <mxCell id="110" parent="jh8YW1rS6jgoNghJCkyT-113" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1.3;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=18;fontStyle=1;fontFamily=Times New Roman;" value="&lt;font&gt;&lt;b&gt;LỚP TRÌNH BÀY / API&lt;/b&gt;&lt;br&gt;&lt;span&gt;React + Express Controller&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="190" x="15" y="18" as="geometry" />
+        </mxCell>
+        <mxCell id="20" parent="jh8YW1rS6jgoNghJCkyT-113" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;fontSize=18;spacing=6;fontFamily=Times New Roman;" value="&lt;b&gt;InventoryPage&lt;/b&gt;&lt;br&gt;Xem tồn / tồn thấp" vertex="1">
+          <mxGeometry height="70" width="190" x="240" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="21" parent="jh8YW1rS6jgoNghJCkyT-113" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;fontSize=18;spacing=6;fontFamily=Times New Roman;" value="&lt;b&gt;StockReceiptPage&lt;/b&gt;&lt;br&gt;Ghi nhận nhập" vertex="1">
+          <mxGeometry height="70" width="190" x="450" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="22" parent="jh8YW1rS6jgoNghJCkyT-113" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;fontSize=18;spacing=6;fontFamily=Times New Roman;" value="&lt;b&gt;PartIssuePage&lt;/b&gt;&lt;br&gt;Xuất cho phiếu" vertex="1">
+          <mxGeometry height="70" width="190" x="660" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="23" parent="jh8YW1rS6jgoNghJCkyT-113" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;fontSize=18;spacing=6;fontFamily=Times New Roman;" value="&lt;b&gt;Express Controllers&lt;/b&gt;&lt;br&gt;Stock / Transaction / TicketPart" vertex="1">
+          <mxGeometry height="70" width="170" x="870" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="jh8YW1rS6jgoNghJCkyT-114" connectable="0" parent="1" style="group;fontFamily=Times New Roman;fontSize=18;" value="" vertex="1">
+          <mxGeometry height="125" width="1060" x="160" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="11" parent="jh8YW1rS6jgoNghJCkyT-114" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1.6;fillColor=#f8f9fa;strokeColor=#5b6b7a;fontSize=18;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="125" width="1060" as="geometry" />
+        </mxCell>
+        <mxCell id="111" parent="jh8YW1rS6jgoNghJCkyT-114" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1.3;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=18;fontStyle=1;fontFamily=Times New Roman;" value="&lt;font&gt;LỚP NGHIỆP VỤ&lt;br&gt;&lt;span&gt;Service&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="190" x="15" y="18" as="geometry" />
+        </mxCell>
+        <mxCell id="30" parent="jh8YW1rS6jgoNghJCkyT-114" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;fontSize=18;spacing=6;fontFamily=Times New Roman;" value="&lt;b&gt;InventoryService&lt;/b&gt;&lt;br&gt;tra cứu tồn, tồn thấp" vertex="1">
+          <mxGeometry height="70" width="220" x="240" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="31" parent="jh8YW1rS6jgoNghJCkyT-114" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;fontSize=18;spacing=6;fontFamily=Times New Roman;" value="&lt;b&gt;StockTransactionService&lt;/b&gt;&lt;br&gt;nhập / xuất / QT-09 / transaction" vertex="1">
+          <mxGeometry height="70" width="270" x="490" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="32" parent="jh8YW1rS6jgoNghJCkyT-114" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;fontSize=18;spacing=6;fontFamily=Times New Roman;" value="&lt;b&gt;TicketPartService&lt;/b&gt;&lt;br&gt;lưu / xem linh kiện theo phiếu" vertex="1">
+          <mxGeometry height="70" width="230" x="790" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="60" edge="1" parent="1" source="23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1.6;fontSize=18;fontFamily=Times New Roman;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="31" value="HTTP / JSON">
+          <mxGeometry relative="1" x="-0.0208" as="geometry">
+            <Array as="points">
+              <mxPoint x="1125" y="260" />
+              <mxPoint x="785" y="260" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="61" edge="1" parent="1" source="31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1.6;fontSize=18;fontFamily=Times New Roman;" target="42" value="gọi Repository">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
