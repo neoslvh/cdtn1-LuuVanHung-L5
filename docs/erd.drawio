@@ -1,0 +1,151 @@
+<mxfile host="app.diagrams.net" agent="ChatGPT" compressed="false">
+  <diagram id="99045b6a" name="ERD">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1550" pageHeight="930" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=13;fontStyle=1;strokeColor=none;fillColor=none;" value="L5 — ERD HỆ THỐNG QUẢN LÝ KHO LINH KIỆN THAY THẾ" vertex="1">
+          <mxGeometry height="42" width="1050" x="250" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="40" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#5b6b7a;strokeWidth=1.5;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="123.5" width="350" x="1035" y="455" as="geometry" />
+        </mxCell>
+        <mxCell id="1040" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d9e8fb;strokeColor=#5b6b7a;fontStyle=1;fontSize=13;" value="&lt;b&gt;ticket_part&lt;/b&gt;" vertex="1">
+          <mxGeometry height="38" width="350" x="1035" y="455" as="geometry" />
+        </mxCell>
+        <mxCell id="2040" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="&lt;b&gt;PK, FK&lt;/b&gt; ticket_id : BIGINT" vertex="1">
+          <mxGeometry height="23" width="334" x="1043" y="497" as="geometry" />
+        </mxCell>
+        <mxCell id="2041" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="&lt;b&gt;PK, FK&lt;/b&gt; part_id : BIGINT" vertex="1">
+          <mxGeometry height="23" width="334" x="1043" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="50" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#5b6b7a;strokeWidth=1.5;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="313" width="400" x="500" y="525" as="geometry" />
+        </mxCell>
+        <mxCell id="1050" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d9e8fb;strokeColor=#5b6b7a;fontStyle=1;fontSize=13;" value="&lt;b&gt;part_transaction&lt;/b&gt;" vertex="1">
+          <mxGeometry height="38" width="400" x="500" y="525" as="geometry" />
+        </mxCell>
+        <mxCell id="2050" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="&lt;b&gt;PK&lt;/b&gt; transaction_id : BIGSERIAL" vertex="1">
+          <mxGeometry height="23" width="384" x="508" y="567" as="geometry" />
+        </mxCell>
+        <mxCell id="2051" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="center_id : BIGINT NOT NULL" vertex="1">
+          <mxGeometry height="23" width="384" x="508" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="2052" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="part_id : BIGINT NOT NULL" vertex="1">
+          <mxGeometry height="23" width="384" x="508" y="613" as="geometry" />
+        </mxCell>
+        <mxCell id="2053" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="ticket_id : BIGINT NULL" vertex="1">
+          <mxGeometry height="23" width="384" x="508" y="636" as="geometry" />
+        </mxCell>
+        <mxCell id="2054" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="transaction_type : VARCHAR(10) NOT NULL" vertex="1">
+          <mxGeometry height="23" width="384" x="508" y="659" as="geometry" />
+        </mxCell>
+        <mxCell id="2055" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="CHECK IN (&#39;IN&#39;,&#39;OUT&#39;)" vertex="1">
+          <mxGeometry height="23" width="384" x="508" y="682" as="geometry" />
+        </mxCell>
+        <mxCell id="2056" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="quantity : INT NOT NULL CHECK &amp;gt; 0" vertex="1">
+          <mxGeometry height="23" width="384" x="508" y="705" as="geometry" />
+        </mxCell>
+        <mxCell id="2057" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="created_at : TIMESTAMPTZ NOT NULL" vertex="1">
+          <mxGeometry height="23" width="384" x="508" y="728" as="geometry" />
+        </mxCell>
+        <mxCell id="101" edge="1" parent="1" source="10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;startArrow=ERone;startFill=0;endArrow=ERzeroToMany;endFill=0;strokeWidth=1.7;fontSize=13;labelBackgroundColor=#ffffff;" target="20" value="1 : 0..N">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="102" edge="1" parent="1" source="10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;startArrow=ERone;startFill=0;endArrow=ERzeroToMany;endFill=0;strokeWidth=1.7;fontSize=13;labelBackgroundColor=#ffffff;" target="40" value="1 : 0..N">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="255" y="430" />
+              <mxPoint x="970" y="430" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="103" edge="1" parent="1" source="30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;startArrow=ERone;startFill=0;endArrow=ERzeroToMany;endFill=0;strokeWidth=1.7;fontSize=13;labelBackgroundColor=#ffffff;" target="40" value="1 : 0..N">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="104" edge="1" parent="1" source="20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;startArrow=ERone;startFill=0;endArrow=ERzeroToMany;endFill=0;strokeWidth=1.7;fontSize=13;labelBackgroundColor=#ffffff;" target="50" value="1 : 0..N">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="105" edge="1" parent="1" source="40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;startArrow=ERzeroToOne;startFill=0;endArrow=ERzeroToMany;endFill=0;strokeWidth=1.7;fontSize=13;labelBackgroundColor=#ffffff;" target="50" value="0..1 : 0..N&amp;nbsp;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="955" y="650" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2058" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="&lt;b&gt;FK1&lt;/b&gt; (center_id, part_id) → part_stock(center_id, part_id)" vertex="1">
+          <mxGeometry height="23" width="384" x="508" y="751" as="geometry" />
+        </mxCell>
+        <mxCell id="2059" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="&lt;b&gt;FK2&lt;/b&gt; (ticket_id, part_id) → ticket_part(ticket_id, part_id)" vertex="1">
+          <mxGeometry height="23" width="384" x="508" y="774" as="geometry" />
+        </mxCell>
+        <mxCell id="2060" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="CHECK: IN → ticket_id IS NULL; OUT → ticket_id IS NOT NULL" vertex="1">
+          <mxGeometry height="23" width="384" x="508" y="797" as="geometry" />
+        </mxCell>
+        <mxCell id="G4vgzlqqBIEkrMqQXX4P-2061" connectable="0" parent="1" style="group;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="113" width="320" x="1050" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="30" parent="G4vgzlqqBIEkrMqQXX4P-2061" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#5b6b7a;strokeWidth=1.5;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="113" width="320" as="geometry" />
+        </mxCell>
+        <mxCell id="1030" parent="G4vgzlqqBIEkrMqQXX4P-2061" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d9e8fb;strokeColor=#5b6b7a;fontStyle=1;fontSize=13;" value="&lt;b&gt;ticket&lt;/b&gt;" vertex="1">
+          <mxGeometry height="38" width="320" as="geometry" />
+        </mxCell>
+        <mxCell id="2030" parent="G4vgzlqqBIEkrMqQXX4P-2061" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="&lt;b&gt;PK&lt;/b&gt; ticket_id : BIGSERIAL" vertex="1">
+          <mxGeometry height="23" width="304" x="8" y="42" as="geometry" />
+        </mxCell>
+        <mxCell id="2031" parent="G4vgzlqqBIEkrMqQXX4P-2061" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="&lt;b&gt;UQ&lt;/b&gt; ticket_code : VARCHAR(20) NOT NULL" vertex="1">
+          <mxGeometry height="23" width="304" x="8" y="65" as="geometry" />
+        </mxCell>
+        <mxCell id="2032" parent="G4vgzlqqBIEkrMqQXX4P-2061" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="center_id : BIGINT NOT NULL" vertex="1">
+          <mxGeometry height="23" width="304" x="8" y="88" as="geometry" />
+        </mxCell>
+        <mxCell id="G4vgzlqqBIEkrMqQXX4P-2062" connectable="0" parent="1" style="group;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="138" width="340" x="530" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="20" parent="G4vgzlqqBIEkrMqQXX4P-2062" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#5b6b7a;strokeWidth=1.5;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="138" width="340" as="geometry" />
+        </mxCell>
+        <mxCell id="1020" parent="G4vgzlqqBIEkrMqQXX4P-2062" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d9e8fb;strokeColor=#5b6b7a;fontStyle=1;fontSize=13;" value="&lt;b&gt;part_stock&lt;/b&gt;" vertex="1">
+          <mxGeometry height="38" width="340" as="geometry" />
+        </mxCell>
+        <mxCell id="2020" parent="G4vgzlqqBIEkrMqQXX4P-2062" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="&lt;b&gt;PK&lt;/b&gt; center_id : BIGINT" vertex="1">
+          <mxGeometry height="23" width="324" x="8" y="42" as="geometry" />
+        </mxCell>
+        <mxCell id="2021" parent="G4vgzlqqBIEkrMqQXX4P-2062" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="&lt;b&gt;PK, FK&lt;/b&gt; part_id : BIGINT" vertex="1">
+          <mxGeometry height="23" width="324" x="8" y="65" as="geometry" />
+        </mxCell>
+        <mxCell id="2022" parent="G4vgzlqqBIEkrMqQXX4P-2062" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="quantity : INT NOT NULL CHECK &amp;gt;= 0" vertex="1">
+          <mxGeometry height="23" width="324" x="8" y="88" as="geometry" />
+        </mxCell>
+        <mxCell id="2023" parent="G4vgzlqqBIEkrMqQXX4P-2062" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="min_threshold : INT NOT NULL CHECK &amp;gt;= 0" vertex="1">
+          <mxGeometry height="23" width="324" x="8" y="111" as="geometry" />
+        </mxCell>
+        <mxCell id="-8piQUh4HIQkYRsFIR88-2060" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="145" width="340" x="40" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="10" parent="-8piQUh4HIQkYRsFIR88-2060" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#5b6b7a;strokeWidth=1.5;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="145" width="340" as="geometry" />
+        </mxCell>
+        <mxCell id="1010" parent="-8piQUh4HIQkYRsFIR88-2060" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d9e8fb;strokeColor=#5b6b7a;fontStyle=1;fontSize=13;" value="&lt;b&gt;part&lt;/b&gt;" vertex="1">
+          <mxGeometry height="39.927536231884055" width="340" as="geometry" />
+        </mxCell>
+        <mxCell id="2010" parent="-8piQUh4HIQkYRsFIR88-2060" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="&lt;b&gt;PK&lt;/b&gt; part_id : BIGSERIAL" vertex="1">
+          <mxGeometry height="24.166666666666668" width="323" x="8.5" y="44.130434782608695" as="geometry" />
+        </mxCell>
+        <mxCell id="2011" parent="-8piQUh4HIQkYRsFIR88-2060" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="&lt;b&gt;UQ&lt;/b&gt; part_code : VARCHAR(30) NOT NULL" vertex="1">
+          <mxGeometry height="24.166666666666668" width="323" x="8.5" y="68.29710144927536" as="geometry" />
+        </mxCell>
+        <mxCell id="2012" parent="-8piQUh4HIQkYRsFIR88-2060" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="part_name : VARCHAR(120) NOT NULL" vertex="1">
+          <mxGeometry height="24.166666666666668" width="323" x="8.5" y="92.46376811594203" as="geometry" />
+        </mxCell>
+        <mxCell id="2013" parent="-8piQUh4HIQkYRsFIR88-2060" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="unit_price : NUMERIC(12,0) NOT NULL CHECK &amp;gt;= 0" vertex="1">
+          <mxGeometry height="24.166666666666668" width="323" x="8.5" y="116.6304347826087" as="geometry" />
+        </mxCell>
+        <mxCell id="-8piQUh4HIQkYRsFIR88-2064" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="&lt;pre dir=&quot;ltr&quot;&gt;&lt;code&gt;&lt;font face=&quot;Helvetica&quot;&gt;quantity_used : INT NOT NULL CHECK &amp;gt; 0&lt;/font&gt;&lt;/code&gt;&lt;/pre&gt;" vertex="1">
+          <mxGeometry height="23" width="334" x="1043" y="545.5" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
