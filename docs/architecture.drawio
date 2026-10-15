@@ -112,6 +112,9 @@
         <mxCell id="61" edge="1" parent="1" source="31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1.6;fontSize=18;fontFamily=Times New Roman;" target="42" value="gọi Repository">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
+        <mxCell id="scope-note" parent="1" style="shape=note;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=15;spacing=8;align=left;fontFamily=Times New Roman;" value="&lt;b&gt;NGOÀI PHẠM VI L5&lt;/b&gt;&lt;br&gt;Đăng nhập/xác thực; tạo, đóng hoặc cập nhật trạng thái phiếu bảo hành; quản lý nhà cung cấp, đặt mua và chuyển kho." vertex="1">
+          <mxGeometry height="125" width="250" x="1260" y="225" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>

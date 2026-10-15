@@ -214,7 +214,7 @@ Quan hệ `<<include>>`: UC4 bao gồm UC3, vì hệ thống luôn phải kiểm
 
 **BR4 — Dữ liệu theo trung tâm (QT-14).** Kỹ thuật viên chỉ xem dữ liệu của trung tâm mình làm việc; quản lý trung tâm chỉ xem dữ liệu của đơn vị mình phụ trách.
 
-**BR5 — Truy vết linh kiện đã sử dụng.** Mỗi linh kiện xuất cho phiếu bảo hành phải được lưu liên kết trong `ticket_part` để truy vết sau này.
+**BR5 — Truy vết linh kiện đã sử dụng.** Mỗi linh kiện xuất cho phiếu bảo hành phải được lưu tại `ticket_part`; `quantity_used` là số lượng đã dùng theo linh kiện và phiếu. `part_transaction` lưu lịch sử từng lần nhập hoặc xuất để kiểm toán.
 
 ## 6. Bảng truy vết yêu cầu
 

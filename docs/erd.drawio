@@ -145,6 +145,9 @@
         <mxCell id="-8piQUh4HIQkYRsFIR88-2064" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;strokeColor=none;fillColor=none;spacingLeft=4;" value="&lt;pre dir=&quot;ltr&quot;&gt;&lt;code&gt;&lt;font face=&quot;Helvetica&quot;&gt;quantity_used : INT NOT NULL CHECK &amp;gt; 0&lt;/font&gt;&lt;/code&gt;&lt;/pre&gt;" vertex="1">
           <mxGeometry height="23" width="334" x="1043" y="545.5" as="geometry" />
         </mxCell>
+        <mxCell id="erd-legend" parent="1" style="shape=note;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;spacing=8;align=left;" value="&lt;b&gt;Chú thích ký hiệu&lt;/b&gt;&lt;br&gt;PK: khóa chính; FK: khóa ngoại; UQ: duy nhất.&lt;br&gt;1 : 0..N = một bản ghi phía nguồn liên kết với không hoặc nhiều bản ghi phía đích.&lt;br&gt;0..1 : 0..N = quan hệ tùy chọn một với không hoặc nhiều.&lt;br&gt;Đường nét đứt: quan hệ chỉ áp dụng cho giao dịch OUT." vertex="1">
+          <mxGeometry height="78" width="610" x="50" y="850" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>

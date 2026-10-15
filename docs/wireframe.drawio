@@ -209,6 +209,9 @@
         <mxCell id="n7_ysS2y0JGIKXduASba-184" parent="20HpMOrMt5TouRYtJou8-81" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1;" value="Xem lịch sử" vertex="1">
           <mxGeometry height="38" width="140" x="305" y="127" as="geometry" />
         </mxCell>
+        <mxCell id="ticket-part-source-note" parent="1" style="shape=note;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;spacing=7;align=left;" value="&lt;b&gt;Quy ước dữ liệu:&lt;/b&gt; số lượng linh kiện đã dùng cho một phiếu được lưu tại &lt;code&gt;ticket_part.quantity_used&lt;/code&gt;; &lt;code&gt;part_transaction&lt;/code&gt; lưu lịch sử từng lần nhập/xuất để kiểm toán." vertex="1">
+          <mxGeometry height="55" width="465" x="1012" y="575" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
