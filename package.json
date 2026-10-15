@@ -8,8 +8,10 @@
     "test": "tests"
   },
   "scripts": {
-    "dev": "node src/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node src/server.js",
+    "test": "node --test",
+    "db:migrate": "node src/scripts/migrate.js",
+    "db:seed": "node src/scripts/seed.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +26,8 @@
   },
   "homepage": "https://github.com/neoslvh/cdtn1-LuuVanHung-L5#readme",
   "dependencies": {
-    "express": "^5.2.1"
+    "dotenv": "^18.0.8",
+    "express": "^5.2.1",
+    "pg": "^8.23.1"
   }
 }
