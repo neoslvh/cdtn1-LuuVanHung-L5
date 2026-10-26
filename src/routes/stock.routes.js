@@ -1,18 +1,21 @@
 const express = require("express");
 const { validateStockReceipt } = require("../validators/stock-receipt.validator");
+const { validatePagination } = require("../validators/pagination.validator");
 const { requireRole } = require("../middleware/auth-context");
 
 module.exports = function createStockRoutes(stockTransactionService) {
   const router = express.Router();
 
   router.get("/part-stocks", async (req, res) => {
-    const items = await stockTransactionService.listStocks(req.auth.centerId);
-    res.json({ center_id: req.auth.centerId, items, total: items.length });
+    const { page, size } = validatePagination(req.query);
+    const data = await stockTransactionService.listStocks(req.auth.centerId, { page, size });
+    res.json({ center_id: req.auth.centerId, ...data });
   });
 
   router.get("/stock-alerts", requireRole("CENTER_MANAGER"), async (req, res) => {
-    const items = await stockTransactionService.listStocks(req.auth.centerId, { lowOnly: true });
-    res.json({ center_id: req.auth.centerId, items, total: items.length });
+    const { page, size } = validatePagination(req.query);
+    const data = await stockTransactionService.listStocks(req.auth.centerId, { lowOnly: true, page, size });
+    res.json({ center_id: req.auth.centerId, ...data });
   });
 
   router.post("/stock-receipts", requireRole("CENTER_MANAGER"), async (req, res) => {
@@ -23,10 +26,8 @@ module.exports = function createStockRoutes(stockTransactionService) {
   router.get("/parts/:partId/availability", async (req, res) => {
     const partId = Number(req.params.partId);
     const requestedQuantity = Number(req.query.requested_quantity || 1);
-    const items = await stockTransactionService.listStocks(req.auth.centerId);
-    const item = items.find((stock) => stock.part_id === partId);
-    if (!item) return res.status(404).json({ error: { code: "PART_NOT_FOUND", message: "Không tìm thấy linh kiện.", fields: {} } });
-    res.json({ ...item, requested_quantity: requestedQuantity, available: item.quantity >= requestedQuantity });
+    const item = await stockTransactionService.getAvailability(req.auth.centerId, partId, requestedQuantity);
+    res.json(item);
   });
 
   return router;

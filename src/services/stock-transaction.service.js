@@ -13,9 +13,15 @@ class StockTransactionService {
     this.ticketPartRepository = ticketPartRepository;
   }
 
-  async listStocks(centerId, { lowOnly = false } = {}) {
-    const rows = await this.stockRepository.list(centerId, { lowOnly });
-    return rows.map(toStockView);
+  async listStocks(centerId, { lowOnly = false, page = 1, size = 20 } = {}) {
+    const { rows, total } = await this.stockRepository.list(centerId, { lowOnly, page, size });
+    return { items: rows.map(toStockView), page, size, total };
+  }
+
+  async getAvailability(centerId, partId, requestedQuantity) {
+    const stock = await this.stockRepository.find(centerId, partId);
+    if (!stock) throw new AppError("PART_NOT_FOUND", "Không tìm thấy linh kiện.");
+    return { ...toStockView(stock), requested_quantity: requestedQuantity, available: stock.quantity >= requestedQuantity };
   }
 
   async receive(centerId, { partId, quantity }) {

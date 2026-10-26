@@ -2,8 +2,17 @@ import { request } from "./client";
 
 export const inventoryApi = {
   login: (role) => request("/api/auth/demo-login", { method: "POST", body: JSON.stringify({ role }) }),
-  listStock: () => request("/api/part-stocks"),
-  listAlerts: () => request("/api/stock-alerts"),
+  listStock: ({ page = 1, size = 20 } = {}) => request(`/api/part-stocks?page=${page}&size=${size}`),
+  listAlerts: ({ page = 1, size = 20 } = {}) => request(`/api/stock-alerts?page=${page}&size=${size}`),
+  async listAllStock() {
+    const firstPage = await this.listStock({ page: 1, size: 100 });
+    const pageCount = Math.ceil(firstPage.total / firstPage.size);
+    if (pageCount <= 1) return { ...firstPage, items: firstPage.items };
+    const remaining = await Promise.all(
+      Array.from({ length: pageCount - 1 }, (_, index) => this.listStock({ page: index + 2, size: 100 })),
+    );
+    return { ...firstPage, items: [firstPage.items, ...remaining.map((page) => page.items)].flat() };
+  },
   receive: (payload) => request("/api/stock-receipts", { method: "POST", body: JSON.stringify(payload) }),
   listTickets: () => request("/api/tickets"),
   listTicketParts: (ticketId) => request(`/api/tickets/${ticketId}/parts`),
