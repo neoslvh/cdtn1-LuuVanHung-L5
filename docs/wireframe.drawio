@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="ChatGPT" compressed="false">
   <diagram id="a9d06a8e" name="Page-1">
-    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
+    <mxGraphModel dx="1683" dy="1055" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -209,8 +209,8 @@
         <mxCell id="n7_ysS2y0JGIKXduASba-184" parent="20HpMOrMt5TouRYtJou8-81" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1;" value="Xem lịch sử" vertex="1">
           <mxGeometry height="38" width="140" x="305" y="127" as="geometry" />
         </mxCell>
-        <mxCell id="ticket-part-source-note" parent="1" style="shape=note;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;spacing=7;align=left;" value="&lt;b&gt;Quy ước dữ liệu:&lt;/b&gt; số lượng linh kiện đã dùng cho một phiếu được lưu tại &lt;code&gt;ticket_part.quantity_used&lt;/code&gt;; &lt;code&gt;part_transaction&lt;/code&gt; lưu lịch sử từng lần nhập/xuất để kiểm toán." vertex="1">
-          <mxGeometry height="55" width="465" x="1012" y="575" as="geometry" />
+        <mxCell id="ticket-part-source-note" parent="20HpMOrMt5TouRYtJou8-81" style="shape=note;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;spacing=7;align=left;" value="&lt;b&gt;Quy ước dữ liệu:&lt;/b&gt; số lượng linh kiện đã dùng cho một phiếu được lưu tại &lt;code&gt;ticket_part.quantity_used&lt;/code&gt;; &lt;code&gt;part_transaction&lt;/code&gt; lưu lịch sử từng lần nhập/xuất để kiểm toán." vertex="1">
+          <mxGeometry height="55" width="465" x="1012.5" y="580" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
