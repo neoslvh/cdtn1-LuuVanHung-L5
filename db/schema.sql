@@ -12,7 +12,7 @@ CREATE TABLE part_stock (
   center_id BIGINT NOT NULL,
   part_id BIGINT NOT NULL REFERENCES part(part_id),
   quantity INT NOT NULL DEFAULT 0 CHECK (quantity >= 0),
-  min_threshold INT NOT NULL CHECK (min_threshold >= 0),
+  min_threshold INT NOT NULL CHECK (min_threshold > 0),
   PRIMARY KEY (center_id, part_id)
 );
 
