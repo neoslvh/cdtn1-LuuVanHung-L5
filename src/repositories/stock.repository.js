@@ -1,20 +1,27 @@
 // Chỉ truy cập bảng part_stock; không đặt quy tắc nghiệp vụ ở đây.
+const { databaseQuery } = require("./database-query");
 class StockRepository {
   constructor(pool) { this.pool = pool; }
 
-  async list(centerId, { lowOnly = false } = {}) {
-    const { rows } = await this.pool.query(
+  async list(centerId, { lowOnly = false, page = 1, size = 20 } = {}) {
+    const offset = (page - 1) * size;
+    const { rows } = await databaseQuery(this.pool,
       `SELECT ps.center_id, ps.part_id, p.part_code, p.part_name, ps.quantity, ps.min_threshold,
-              CASE WHEN ps.quantity < ps.min_threshold THEN 'LOW_STOCK' ELSE 'NORMAL' END AS status
+              CASE WHEN ps.quantity < ps.min_threshold THEN 'LOW_STOCK' ELSE 'NORMAL' END AS status,
+              COUNT(*) OVER() AS total
        FROM part_stock ps JOIN part p ON p.part_id = ps.part_id
        WHERE ps.center_id = $1 AND ($2::boolean = FALSE OR ps.quantity < ps.min_threshold)
-       ORDER BY p.part_code`, [centerId, lowOnly],
+       ORDER BY p.part_code
+       LIMIT $3 OFFSET $4`, [centerId, lowOnly, size, offset],
     );
-    return rows;
+    return {
+      rows: rows.map(({ total, ...row }) => row),
+      total: Number(rows[0]?.total ?? 0),
+    };
   }
 
   async findForUpdate(client, centerId, partId) {
-    const { rows } = await client.query(
+    const { rows } = await databaseQuery(client,
       `SELECT ps.center_id, ps.part_id, ps.quantity, ps.min_threshold, p.part_code, p.part_name
        FROM part_stock ps JOIN part p ON p.part_id = ps.part_id
        WHERE ps.center_id = $1 AND ps.part_id = $2 FOR UPDATE`, [centerId, partId],
@@ -22,8 +29,18 @@ class StockRepository {
     return rows[0] ?? null;
   }
 
+  async find(centerId, partId) {
+    const { rows } = await databaseQuery(this.pool,
+      `SELECT ps.center_id, ps.part_id, ps.quantity, ps.min_threshold, p.part_code, p.part_name,
+              CASE WHEN ps.quantity < ps.min_threshold THEN 'LOW_STOCK' ELSE 'NORMAL' END AS status
+       FROM part_stock ps JOIN part p ON p.part_id = ps.part_id
+       WHERE ps.center_id = $1 AND ps.part_id = $2`, [centerId, partId],
+    );
+    return rows[0] ?? null;
+  }
+
   async updateQuantity(client, centerId, partId, quantity) {
-    const { rows } = await client.query(
+    const { rows } = await databaseQuery(client,
       `UPDATE part_stock SET quantity = $3 WHERE center_id = $1 AND part_id = $2
        RETURNING center_id, part_id, quantity, min_threshold`, [centerId, partId, quantity],
     );

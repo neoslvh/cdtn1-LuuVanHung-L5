@@ -9,4 +9,14 @@ class AppError extends Error {
   }
 }
 
-module.exports = { AppError };
+class DataAccessError extends Error {
+  constructor(code, message, httpStatus, cause) {
+    super(message, { cause });
+    this.name = "DataAccessError";
+    this.code = code;
+    this.httpStatus = httpStatus;
+    this.cause = cause;
+  }
+}
+
+module.exports = { AppError, DataAccessError };
