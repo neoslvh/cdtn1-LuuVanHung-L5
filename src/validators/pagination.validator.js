@@ -4,7 +4,7 @@ const { AppError } = require("../errors/AppError");
 function validatePagination(query = {}) {
   const fields = {};
   const page = query.page === undefined ? 1 : Number(query.page);
-  const size = query.size === undefined ? 20 : Number(query.size);
+  const size = query.size === undefined ? 10 : Number(query.size);
 
   if (!Number.isSafeInteger(page) || page < 1) {
     fields.page = "page phải là số nguyên lớn hơn hoặc bằng 1.";

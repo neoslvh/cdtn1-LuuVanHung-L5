@@ -8,7 +8,12 @@ function toDataAccessError(error) {
   if (error?.code === "23503") {
     return new DataAccessError("DATA_IN_USE", "Dữ liệu đang được tham chiếu.", 409, error);
   }
-  return new DataAccessError("DATA_ACCESS_FAILED", "Không thể truy cập dữ liệu. Vui lòng thử lại.", 503, error);
+  return new DataAccessError(
+    "DATA_ACCESS_FAILED",
+    "Không thể truy cập dữ liệu. Vui lòng thử lại.",
+    503,
+    error,
+  );
 }
 
 async function databaseQuery(executor, statement, values) {

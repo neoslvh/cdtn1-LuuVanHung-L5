@@ -6,7 +6,7 @@ const { logger } = require("./logger");
 
 const pool = createPool();
 const app = buildApp(pool);
-const port = Number(process.env.PORT || 3000);
+const port = Number(process.env.API_PORT || process.env.PORT || 3000);
 
 const server = app.listen(port, () => {
   logger.info("server_started", { port });

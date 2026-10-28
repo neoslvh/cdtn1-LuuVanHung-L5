@@ -6,7 +6,8 @@ class PartRepository {
   }
 
   async findAll() {
-    const { rows } = await databaseQuery(this.pool,
+    const { rows } = await databaseQuery(
+      this.pool,
       `SELECT part_id, part_code, part_name, unit_price
        FROM part
        ORDER BY part_code ASC`,
@@ -15,7 +16,8 @@ class PartRepository {
   }
 
   async findById(partId) {
-    const { rows } = await databaseQuery(this.pool,
+    const { rows } = await databaseQuery(
+      this.pool,
       `SELECT part_id, part_code, part_name, unit_price
        FROM part
        WHERE part_id = $1`,
@@ -25,7 +27,8 @@ class PartRepository {
   }
 
   async create({ part_code, part_name, unit_price }) {
-    const { rows } = await databaseQuery(this.pool,
+    const { rows } = await databaseQuery(
+      this.pool,
       `INSERT INTO part (part_code, part_name, unit_price)
        VALUES ($1, $2, $3)
        RETURNING part_id, part_code, part_name, unit_price`,
@@ -35,7 +38,8 @@ class PartRepository {
   }
 
   async update(partId, { part_code, part_name, unit_price }) {
-    const { rows } = await databaseQuery(this.pool,
+    const { rows } = await databaseQuery(
+      this.pool,
       `UPDATE part
        SET part_code = COALESCE($2, part_code),
            part_name = COALESCE($3, part_name),
@@ -48,10 +52,9 @@ class PartRepository {
   }
 
   async delete(partId) {
-    const { rowCount } = await databaseQuery(this.pool,
-      "DELETE FROM part WHERE part_id = $1",
-      [partId],
-    );
+    const { rowCount } = await databaseQuery(this.pool, "DELETE FROM part WHERE part_id = $1", [
+      partId,
+    ]);
     return rowCount === 1;
   }
 }

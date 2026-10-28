@@ -12,13 +12,21 @@ function validatePartPayload(payload, { partial = false } = {}) {
   }
 
   if (!partial || Object.hasOwn(payload, "part_code")) {
-    if (typeof payload.part_code !== "string" || !payload.part_code.trim() || payload.part_code.trim().length > 30) {
+    if (
+      typeof payload.part_code !== "string" ||
+      !payload.part_code.trim() ||
+      payload.part_code.trim().length > 30
+    ) {
       errors.part_code = "part_code là chuỗi bắt buộc, dài từ 1 đến 30 ký tự.";
     } else data.part_code = payload.part_code.trim();
   }
 
   if (!partial || Object.hasOwn(payload, "part_name")) {
-    if (typeof payload.part_name !== "string" || !payload.part_name.trim() || payload.part_name.trim().length > 120) {
+    if (
+      typeof payload.part_name !== "string" ||
+      !payload.part_name.trim() ||
+      payload.part_name.trim().length > 120
+    ) {
       errors.part_name = "part_name là chuỗi bắt buộc, dài từ 1 đến 120 ký tự.";
     } else data.part_name = payload.part_name.trim();
   }
