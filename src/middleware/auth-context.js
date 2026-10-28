@@ -9,14 +9,16 @@ const demoUsers = {
 function requireAuth(req, res, next) {
   const token = req.get("authorization")?.replace(/^Bearer\s+/i, "");
   const auth = demoUsers[token];
-  if (!auth) return next(new AppError("UNAUTHORIZED", "Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại."));
+  if (!auth)
+    return next(new AppError("UNAUTHORIZED", "Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại."));
   req.auth = auth;
   next();
 }
 
 function requireRole(...roles) {
   return (req, res, next) => {
-    if (!roles.includes(req.auth.role)) return next(new AppError("FORBIDDEN", "Bạn không có quyền thực hiện thao tác này."));
+    if (!roles.includes(req.auth.role))
+      return next(new AppError("FORBIDDEN", "Bạn không có quyền thực hiện thao tác này."));
     next();
   };
 }

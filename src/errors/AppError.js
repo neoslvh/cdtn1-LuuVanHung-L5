@@ -3,7 +3,7 @@
 class AppError extends Error {
   constructor(code, message, details = undefined) {
     super(message);
-    this.name = 'AppError';
+    this.name = "AppError";
     this.code = code;
     this.details = details;
   }

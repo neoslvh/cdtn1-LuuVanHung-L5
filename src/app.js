@@ -21,16 +21,25 @@ function buildApp(pool) {
   const ticketRepository = new TicketRepository(pool);
   const ticketPartRepository = new TicketPartRepository(pool);
   const stockTransactionService = new StockTransactionService(
-    pool, stockRepository, new TransactionRepository(pool), ticketRepository, ticketPartRepository,
+    pool,
+    stockRepository,
+    new TransactionRepository(pool),
+    ticketRepository,
+    ticketPartRepository,
   );
   const ticketPartService = new TicketPartService(ticketRepository, ticketPartRepository);
 
   app.use(requestContext);
   app.use(express.json({ limit: "256kb" }));
   app.use((req, res, next) => {
-    const allowedOrigins = [process.env.FRONTEND_ORIGIN, "http://localhost:5173", "http://127.0.0.1:5173"].filter(Boolean);
+    const allowedOrigins = [
+      process.env.FRONTEND_ORIGIN,
+      "http://localhost:5173",
+      "http://127.0.0.1:5173",
+    ].filter(Boolean);
     const origin = req.get("origin");
-    if (origin && allowedOrigins.includes(origin)) res.setHeader("Access-Control-Allow-Origin", origin);
+    if (origin && allowedOrigins.includes(origin))
+      res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Request-Id");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
     if (req.method === "OPTIONS") return res.sendStatus(204);
@@ -43,7 +52,9 @@ function buildApp(pool) {
       res.status(200).json({ status: "ok", db: "ok" });
     } catch (error) {
       logger.error("healthcheck_database_failed", { request_id: req.requestId, error });
-      res.status(503).json({ status: "degraded", db: "không kết nối được", request_id: req.requestId });
+      res
+        .status(503)
+        .json({ status: "degraded", db: "không kết nối được", request_id: req.requestId });
     }
   });
 
@@ -52,7 +63,15 @@ function buildApp(pool) {
     const role = req.body?.role;
     if (role === "CENTER_MANAGER") return res.json({ token: "demo-manager", role, center_id: 1 });
     if (role === "TECHNICIAN") return res.json({ token: "demo-technician", role, center_id: 1 });
-    return res.status(400).json({ error: { code: "VALIDATION_FAILED", message: "Vai trò đăng nhập không hợp lệ.", fields: { role: "Chọn một vai trò." } } });
+    return res
+      .status(400)
+      .json({
+        error: {
+          code: "VALIDATION_FAILED",
+          message: "Vai trò đăng nhập không hợp lệ.",
+          fields: { role: "Chọn một vai trò." },
+        },
+      });
   });
   app.use("/api", requireAuth, createStockRoutes(stockTransactionService));
   app.use("/api", requireAuth, createTicketPartRoutes(stockTransactionService, ticketPartService));
@@ -67,13 +86,28 @@ function buildApp(pool) {
     if (error.type === "entity.too.large") {
       logger.info("request_body_too_large", { request_id: req.requestId, status_code: 413 });
       return res.status(413).json({
-        error: { code: "PAYLOAD_TOO_LARGE", message: "Dữ liệu gửi lên vượt giới hạn cho phép.", fields: {} },
+        error: {
+          code: "PAYLOAD_TOO_LARGE",
+          message: "Dữ liệu gửi lên vượt giới hạn cho phép.",
+          fields: {},
+        },
       });
     }
     if (error instanceof AppError) {
-      const statusByCode = { PART_NOT_FOUND: 404, TICKET_NOT_FOUND: 404, UNAUTHORIZED: 401, FORBIDDEN: 403, INSUFFICIENT_STOCK: 409 };
+      const statusByCode = {
+        PART_NOT_FOUND: 404,
+        TICKET_NOT_FOUND: 404,
+        UNAUTHORIZED: 401,
+        FORBIDDEN: 403,
+        INSUFFICIENT_STOCK: 409,
+      };
       const status = statusByCode[error.code] ?? 400;
-      logger.info("business_error", { request_id: req.requestId, error_code: error.code, status_code: status, fields: error.details ?? {} });
+      logger.info("business_error", {
+        request_id: req.requestId,
+        error_code: error.code,
+        status_code: status,
+        fields: error.details ?? {},
+      });
       return res.status(status).json({
         error: { code: error.code, message: error.message, fields: error.details ?? {} },
       });
@@ -92,7 +126,11 @@ function buildApp(pool) {
     }
     logger.error("unexpected_error", { request_id: req.requestId, error });
     return res.status(500).json({
-      error: { code: "INTERNAL_ERROR", message: `Hệ thống đang gặp sự cố. Mã tra cứu: ${req.requestId}`, fields: {} },
+      error: {
+        code: "INTERNAL_ERROR",
+        message: `Hệ thống đang gặp sự cố. Mã tra cứu: ${req.requestId}`,
+        fields: {},
+      },
     });
   });
 
