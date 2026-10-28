@@ -15,10 +15,18 @@ export async function request(path, options = {}) {
   try {
     response = await fetch(`${BASE}${path}`, {
       ...options,
-      headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}), ...options.headers },
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...options.headers,
+      },
     });
   } catch {
-    throw new ApiError(0, "NETWORK_ERROR", "Không kết nối được tới hệ thống. Vui lòng kiểm tra mạng rồi bấm Thử lại.");
+    throw new ApiError(
+      0,
+      "NETWORK_ERROR",
+      "Không kết nối được tới hệ thống. Vui lòng kiểm tra mạng rồi bấm Thử lại.",
+    );
   }
   const body = await response.json().catch(() => null);
   if (!response.ok) {
@@ -28,7 +36,12 @@ export async function request(path, options = {}) {
       localStorage.removeItem("role");
       window.dispatchEvent(new Event("l5:unauthorized"));
     }
-    throw new ApiError(response.status, error.code, error.message || "Không kết nối được tới hệ thống. Vui lòng thử lại.", error.fields);
+    throw new ApiError(
+      response.status,
+      error.code,
+      error.message || "Không kết nối được tới hệ thống. Vui lòng thử lại.",
+      error.fields,
+    );
   }
   return body?.data ?? body;
 }
