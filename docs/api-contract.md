@@ -13,6 +13,8 @@
 | `GET` | `/api/stock-alerts?page={page}&size={size}` | Xem cảnh báo và danh sách linh kiện tồn dưới ngưỡng. | US5 |
 | `GET` | `/api/part-transactions?part_id={part_id}&page={page}&size={size}` | Xem lịch sử nhập — xuất của linh kiện. | US6 |
 | `GET` | `/api/tickets/{ticket_id}/parts` | Xem linh kiện đã xuất cho phiếu bảo hành. | US7 |
+| `POST` | `/api/auth/demo-login` | Cấp phiên demo theo vai trò để kiểm chứng giao diện Sprint 2. | Hỗ trợ kiểm thử |
+| `GET` | `/api/tickets` | Đọc phiếu tham chiếu tại trung tâm để chọn khi xuất linh kiện. | US4 |
 
 ## A3.2. Quy ước chung
 
@@ -20,7 +22,7 @@
 - Tên trường dùng `snake_case`, khớp tên cột trong mô hình dữ liệu để dễ truy vết.
 - Thời gian dùng ISO 8601 kèm múi giờ `+07:00`, ví dụ `2026-10-01T09:15:00+07:00`.
 - Tiền tệ (nếu có) là số nguyên VND, không có phần thập phân hoặc dấu phân cách.
-- Phân trang dùng `page` (bắt đầu từ 1) và `size` (mặc định 20, tối đa 100); response kèm `total`.
+- Phân trang dùng `page` (bắt đầu từ 1) và `size` (mặc định 10, tối đa 100); response kèm `total`.
 - Mọi lỗi trả về cùng cấu trúc:
 
 ```json
@@ -53,7 +55,7 @@
 ```json
 {
   "transaction_id": 501,
-  "transaction_type": "NHAP",
+  "transaction_type": "IN",
   "part_id": 101,
   "center_id": 3,
   "quantity": 20,
@@ -126,7 +128,7 @@
 ```json
 {
   "ticket_id": 9001,
-  "status": "DANG_XU_LY",
+  "ticket_code": "BH-2026-00125",
   "issues": [
     {
       "transaction_id": 502,
@@ -177,8 +179,7 @@
 {
   "error": {
     "code": "INSUFFICIENT_STOCK",
-    "message": "Không đủ linh kiện để xuất; phiếu đã chuyển sang trạng thái CHO_LINH_KIEN.",
-    "ticket_status": "CHO_LINH_KIEN",
+    "message": "Không đủ linh kiện để xuất.",
     "fields": {
       "items[0].quantity": "Linh kiện chỉ còn 0, không đủ để xuất 1."
     }
@@ -209,7 +210,7 @@
 | Trường | Bắt buộc | Kiểu / ràng buộc | Thông báo lỗi khi vi phạm |
 | --- | --- | --- | --- |
 | `page` | Không | Số nguyên `>= 1`; mặc định `1`. | page phải là số nguyên lớn hơn hoặc bằng 1. |
-| `size` | Không | Số nguyên `1–100`; mặc định `20`. | size phải nằm trong khoảng từ 1 đến 100. |
+| `size` | Không | Số nguyên `1–100`; mặc định `10`. | size phải nằm trong khoảng từ 1 đến 100. |
 
 #### Response `200 OK`
 
@@ -225,6 +226,25 @@
       "min_threshold": 5,
       "status": "LOW_STOCK"
     }
+  ],
+  "page": 1,
+  "size": 20,
+  "total": 1
+}
+```
+
+### GET /api/part-transactions?part_id={part_id}&page={page}&size={size} — Xem lịch sử nhập - xuất — US6
+
+**Actor:** Quản lý trung tâm. Chỉ trả về giao dịch của linh kiện thuộc trung tâm đang phụ trách.
+
+#### Response `200 OK`
+
+```json
+{
+  "center_id": 1,
+  "part": { "part_id": 101, "part_code": "PIN-IP13-01", "part_name": "Pin iPhone 13" },
+  "items": [
+    { "transaction_id": 502, "transaction_type": "OUT", "quantity": 1, "ticket_id": 9001, "ticket_code": "BH-2026-00125", "created_at": "2026-10-01T10:30:00+07:00" }
   ],
   "page": 1,
   "size": 20,
@@ -271,18 +291,20 @@
 | `items[].quantity` | Có | Số nguyên, `> 0`; tổng xuất không vượt tồn tại trung tâm (QT-09). | Số lượng xuất không hợp lệ hoặc vượt tồn kho. |
 | `GET /api/stock-alerts.page` | Không | Số nguyên, `>= 1`; mặc định `1`. | page phải là số nguyên lớn hơn hoặc bằng 1. |
 | `GET /api/stock-alerts.size` | Không | Số nguyên, `1–100`; mặc định `20`. | size phải nằm trong khoảng từ 1 đến 100. |
+| `GET /api/part-transactions.part_id` | Có | Số nguyên dương; linh kiện phải thuộc trung tâm hiện tại. | part_id phải là số nguyên dương hoặc không tìm thấy linh kiện. |
 
 ## Xác thực và phân quyền
 
-Mọi endpoint yêu cầu `Authorization: Bearer <access_token>`.
+Mọi endpoint nghiệp vụ yêu cầu `Authorization: Bearer <access_token>`. Ở phạm vi prototype Sprint 2, `POST /api/auth/demo-login` cấp token demo theo vai trò; hệ thống xác thực hoàn chỉnh vẫn ngoài phạm vi L5.
 
 | Endpoint | Vai trò được gọi | Ràng buộc dữ liệu |
 | --- | --- | --- |
 | `POST /api/stock-receipts` | `CENTER_MANAGER` | Chỉ nhập kho tại trung tâm đang phụ trách. |
 | `POST /api/tickets/{ticket_id}/part-issues` | `TECHNICIAN` | Chỉ xuất cho phiếu thuộc trung tâm đang làm việc. |
 | `GET /api/stock-alerts` | `CENTER_MANAGER` | Chỉ xem cảnh báo của trung tâm đang phụ trách. |
+| `GET /api/part-transactions` | `CENTER_MANAGER` | Chỉ xem lịch sử của linh kiện thuộc trung tâm đang phụ trách. |
 
-Quy định này áp dụng QT-14. Endpoint xuất linh kiện áp dụng thêm QT-06 và QT-09: không xuất vượt tồn; khi không đủ linh kiện, phiếu chuyển sang `CHO_LINH_KIEN` và lần chuyển trạng thái phải được lưu.
+Quy định này áp dụng QT-14. Endpoint xuất linh kiện áp dụng QT-09: không xuất vượt tồn; nếu không đủ tồn, giao dịch bị từ chối và không thay đổi tồn kho. Trạng thái phiếu bảo hành thuộc luồng khác, ngoài phạm vi L5.
 
 ## Tự kiểm trước khi nộp BT1
 

@@ -36,7 +36,7 @@ Prototype này chủ ý không thực hiện:
 | Giao dịch xuất | Giao dịch sử dụng linh kiện cho phiếu bảo hành và làm giảm tồn kho. |
 | Phiếu bảo hành | Yêu cầu bảo hành hoặc sửa chữa có mã duy nhất và vòng đời trạng thái. |
 | `quantity` | Số lượng tồn hiện tại trong `part_stock`. |
-| `min_threshold` | Ngưỡng cảnh báo tồn thấp trong `part_stock`. |
+| `min_threshold` | Ngưỡng cảnh báo tồn thấp trong `part_stock`, là số nguyên dương. |
 
 ## 2. Các bên liên quan và vai trò người dùng
 
