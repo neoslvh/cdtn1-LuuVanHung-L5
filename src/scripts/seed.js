@@ -12,5 +12,8 @@ async function main() {
 }
 
 main()
-  .catch((error) => { logger.error("demo_seed_failed", { error }); process.exitCode = 1; })
+  .catch((error) => {
+    logger.error("demo_seed_failed", { error });
+    process.exitCode = 1;
+  })
   .finally(() => pool.end());
