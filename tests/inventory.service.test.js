@@ -7,7 +7,11 @@ test("InventoryService tạo linh kiện qua repository", async () => {
   const repository = { create: async (data) => ({ part_id: 1, ...data }) };
   const service = new InventoryService(repository);
 
-  const result = await service.createPart({ part_code: "L5PART001", part_name: "Pin A52", unit_price: 250000 });
+  const result = await service.createPart({
+    part_code: "L5PART001",
+    part_name: "Pin A52",
+    unit_price: 250000,
+  });
   assert.deepEqual(result, expected);
 });
 
