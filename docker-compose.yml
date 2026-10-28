@@ -1,0 +1,61 @@
+services:
+  db:
+    image: postgres:16.6-alpine3.20
+    environment:
+      POSTGRES_DB: ${DB_NAME:-mekong_l5}
+      POSTGRES_USER: ${DB_USER:-app_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-doi_mat_khau_nay}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./migrations/001_create_l5_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./migrations/002_add_l5_dataset_indexes.sql:/docker-entrypoint-initdb.d/02_indexes.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-app_user} -d ${DB_NAME:-mekong_l5}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    ports:
+      - "${DB_PORT:-5432}:5432"
+
+  seed:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["node", "src/scripts/seed-dataset.js", "--if-empty"]
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-app_user}:${DB_PASSWORD:-doi_mat_khau_nay}@db:5432/${DB_NAME:-mekong_l5}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      API_PORT: 3000
+      DATABASE_URL: postgresql://${DB_USER:-app_user}:${DB_PASSWORD:-doi_mat_khau_nay}@db:5432/${DB_NAME:-mekong_l5}
+      DB_POOL_MAX: ${DB_POOL_MAX:-10}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      FRONTEND_ORIGIN: http://localhost:${WEB_PORT:-5173}
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+    ports:
+      - "${API_PORT:-3000}:3000"
+
+  web:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: ${PUBLIC_API_URL:-http://localhost:3000}
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "${WEB_PORT:-5173}:80"
+
+volumes:
+  db_data:
