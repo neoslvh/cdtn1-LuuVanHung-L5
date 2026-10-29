@@ -7,6 +7,7 @@ const TransactionRepository = require("./repositories/transaction.repository");
 const TicketRepository = require("./repositories/ticket.repository");
 const TicketPartRepository = require("./repositories/ticket-part.repository");
 const StockTransactionService = require("./services/stock-transaction.service");
+const StockConfigurationService = require("./services/stock-configuration.service");
 const TicketPartService = require("./services/ticket-part.service");
 const createStockRoutes = require("./routes/stock.routes");
 const createTicketPartRoutes = require("./routes/ticket-part.routes");
@@ -16,7 +17,8 @@ const { logger, requestContext } = require("./logger");
 
 function buildApp(pool) {
   const app = express();
-  const inventoryService = new InventoryService(new PartRepository(pool));
+  const partRepository = new PartRepository(pool);
+  const inventoryService = new InventoryService(partRepository);
   const stockRepository = new StockRepository(pool);
   const ticketRepository = new TicketRepository(pool);
   const ticketPartRepository = new TicketPartRepository(pool);
@@ -28,6 +30,7 @@ function buildApp(pool) {
     ticketPartRepository,
   );
   const ticketPartService = new TicketPartService(ticketRepository, ticketPartRepository);
+  const stockConfigurationService = new StockConfigurationService(stockRepository, partRepository);
 
   app.use(requestContext);
   app.use(express.json({ limit: "256kb" }));
@@ -73,7 +76,11 @@ function buildApp(pool) {
         },
       });
   });
-  app.use("/api", requireAuth, createStockRoutes(stockTransactionService));
+  app.use(
+    "/api",
+    requireAuth,
+    createStockRoutes(stockTransactionService, stockConfigurationService),
+  );
   app.use("/api", requireAuth, createTicketPartRoutes(stockTransactionService, ticketPartService));
 
   app.use((error, req, res, next) => {
@@ -100,6 +107,8 @@ function buildApp(pool) {
         UNAUTHORIZED: 401,
         FORBIDDEN: 403,
         INSUFFICIENT_STOCK: 409,
+        STOCK_NOT_EMPTY: 409,
+        STOCK_HAS_TRANSACTIONS: 409,
       };
       const status = statusByCode[error.code] ?? 400;
       logger.info("business_error", {

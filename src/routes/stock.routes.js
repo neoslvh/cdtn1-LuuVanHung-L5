@@ -1,10 +1,11 @@
 const express = require("express");
 const { validateStockReceipt } = require("../validators/stock-receipt.validator");
+const { validateStockConfigPayload } = require("../validators/stock-config.validator");
 const { validatePagination } = require("../validators/pagination.validator");
 const { requireRole } = require("../middleware/auth-context");
 const { AppError } = require("../errors/AppError");
 
-module.exports = function createStockRoutes(stockTransactionService) {
+module.exports = function createStockRoutes(stockTransactionService, stockConfigurationService) {
   const router = express.Router();
 
   function partId(value) {
@@ -38,6 +39,33 @@ module.exports = function createStockRoutes(stockTransactionService) {
       size,
     });
     res.json({ center_id: req.auth.centerId, ...data });
+  });
+
+  router.get("/part-stocks/:partId", async (req, res) => {
+    const data = await stockConfigurationService.getStock(req.auth.centerId, partId(req.params.partId));
+    res.json({ data });
+  });
+
+  router.post("/part-stocks", requireRole("CENTER_MANAGER"), async (req, res) => {
+    const data = await stockConfigurationService.createStock(
+      req.auth.centerId,
+      validateStockConfigPayload(req.body),
+    );
+    res.status(201).json({ data });
+  });
+
+  router.patch("/part-stocks/:partId", requireRole("CENTER_MANAGER"), async (req, res) => {
+    const data = await stockConfigurationService.updateThreshold(
+      req.auth.centerId,
+      partId(req.params.partId),
+      validateStockConfigPayload(req.body, { partial: true }),
+    );
+    res.json({ data });
+  });
+
+  router.delete("/part-stocks/:partId", requireRole("CENTER_MANAGER"), async (req, res) => {
+    await stockConfigurationService.deleteStock(req.auth.centerId, partId(req.params.partId));
+    res.status(204).send();
   });
 
   router.get("/stock-alerts", requireRole("CENTER_MANAGER"), async (req, res) => {

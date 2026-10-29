@@ -49,6 +49,53 @@ class StockRepository {
     return rows[0] ?? null;
   }
 
+  async create(centerId, partId, minThreshold) {
+    const { rows } = await databaseQuery(
+      this.pool,
+      `INSERT INTO part_stock (center_id, part_id, quantity, min_threshold)
+       VALUES ($1, $2, 0, $3)
+       RETURNING center_id, part_id, quantity, min_threshold`,
+      [centerId, partId, minThreshold],
+    );
+    const stock = rows[0];
+    const part = await this.find(centerId, stock.part_id);
+    return part;
+  }
+
+  async updateThreshold(centerId, partId, minThreshold) {
+    const { rows } = await databaseQuery(
+      this.pool,
+      `UPDATE part_stock
+       SET min_threshold = $3
+       WHERE center_id = $1 AND part_id = $2
+       RETURNING center_id, part_id`,
+      [centerId, partId, minThreshold],
+    );
+    if (!rows[0]) return null;
+    return this.find(centerId, partId);
+  }
+
+  async hasTransactions(centerId, partId) {
+    const { rows } = await databaseQuery(
+      this.pool,
+      `SELECT EXISTS(
+         SELECT 1 FROM part_transaction
+         WHERE center_id = $1 AND part_id = $2
+       ) AS has_transactions`,
+      [centerId, partId],
+    );
+    return rows[0].has_transactions;
+  }
+
+  async delete(centerId, partId) {
+    const { rowCount } = await databaseQuery(
+      this.pool,
+      "DELETE FROM part_stock WHERE center_id = $1 AND part_id = $2",
+      [centerId, partId],
+    );
+    return rowCount === 1;
+  }
+
   async updateQuantity(client, centerId, partId, quantity) {
     const { rows } = await databaseQuery(
       client,
