@@ -11,71 +11,117 @@ Hệ thống hỗ trợ quản lý trung tâm theo dõi tồn kho linh kiện th
 
 ## 2. Yêu cầu môi trường
 
-- Node.js 20 LTS và npm 10 (Node 18+ vẫn chạy được ở mức prototype)
-- PostgreSQL 16+
-- Biến môi trường backend: xem `.env.example` (`DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_PORT`, `API_PORT`, `LOG_LEVEL`)
-- Biến môi trường frontend: xem `frontend/.env.example` (`VITE_API_BASE_URL`)
+- Cách khuyến nghị: Docker Desktop đang chạy.
+- Nếu chạy cục bộ: Node.js 20 LTS, npm 10 và PostgreSQL 16+.
+- Biến môi trường backend: xem `.env.example` (`DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_PORT`, `API_PORT`, `LOG_LEVEL`).
+- Với Docker Compose, frontend nhận địa chỉ API từ `PUBLIC_API_URL` trong `.env` ở thư mục gốc.
+- Khi chạy frontend cục bộ và cần đổi API, xem `frontend/.env.example` (`VITE_API_BASE_URL`).
 
 ## 3. Hướng dẫn chạy
 
-Mở hai terminal, mỗi lệnh một dòng:
+Chỉ chọn **một** trong hai cách dưới đây. Không cần chạy Docker và PostgreSQL cục bộ cùng lúc.
+
+### Cách A — Docker Compose (khuyến nghị)
+
+Docker Desktop phải đang chạy. Từ thư mục gốc repository, tạo file môi trường:
 
 ```bash
-copy .env.example .env
-npm ci
-npm run db:migrate
-npm run db:seed
-npm run dev
+# Git Bash
+cp .env.example .env
+
+# PowerShell
+Copy-Item .env.example .env
 ```
 
-### Nạp dataset Smart CRM cho L5
-
-Repository có sẵn dữ liệu mẫu trong `data/sample/`, đủ liên kết để kiểm thử luồng L5. Script seed chỉ sử dụng bộ dữ liệu này.
-
-```bash
-npm run db:migrate
-npm run db:seed:dataset -- --reset
-```
-
-Lệnh dataset nạp linh kiện, tồn kho, phiếu tham chiếu và lịch sử nhập/xuất. Tham số `--reset` là bắt buộc vì lệnh sẽ thay thế toàn bộ dữ liệu năm bảng L5 trên cơ sở dữ liệu cục bộ.
-
-Có thể kiểm tra liên kết khóa của dataset mà không thay đổi cơ sở dữ liệu:
-
-```bash
-npm run db:seed:dataset -- --validate
-```
-
-```bash
-cd frontend
-copy .env.example .env
-npm ci
-npm run dev
-```
-
-Mở `http://localhost:5173`. Backend chạy tại `http://localhost:3000`; kiểm tra sức khoẻ tại `/health`.
-Giao diện có hai tài khoản demo: **Quản lý trung tâm** (xem tồn, nhập) và **Kỹ thuật viên** (xem tồn, xuất theo phiếu). Đây là token prototype, không dùng cho môi trường thật.
-
-### Chạy toàn bộ hệ thống bằng Docker
-
-Docker Desktop phải đang chạy. Nếu chưa tạo `.env`, hãy thực hiện bước `copy .env.example .env` ở phần hướng dẫn chạy phía trên. Sau đó, từ thư mục gốc chạy:
+Sau đó chạy toàn bộ PostgreSQL, API và frontend:
 
 ```bash
 docker compose up -d --build
 ```
 
-Mở `http://localhost:5173`; API health check tại `http://localhost:3000/health`. Khi volume PostgreSQL còn trống, Compose tự tạo bảng và nạp dataset L5 từ `data/sample/`. Các lần bật tiếp theo giữ nguyên dữ liệu đã thao tác. Kiểm tra trạng thái và log:
+Không cần tạo `frontend/.env` khi chạy Docker. Compose dùng `PUBLIC_API_URL` trong file `.env` ở thư mục gốc để build frontend. Mặc định giữ `PUBLIC_API_URL=http://localhost:3000`; chỉ sửa biến này khi API được mở ở địa chỉ khác.
+
+Mở `http://localhost:5173`. API health check tại `http://localhost:3000/health`.
+
+Khi volume PostgreSQL còn trống, Compose tự tạo database, bảng và nạp dataset L5 từ `data/sample/`. Các lần bật tiếp theo giữ nguyên dữ liệu đã thao tác.
 
 ```bash
+# Kiểm tra trạng thái và log API
 docker compose ps
 docker compose logs api --tail 20
 ```
 
-Để tạo lại dataset từ đầu (xóa volume Docker cục bộ):
+Sau khi sửa source code, build lại bằng:
+
+```bash
+docker compose up -d --build
+```
+
+Để tạo lại dataset từ đầu (xóa toàn bộ dữ liệu Docker cục bộ):
 
 ```bash
 docker compose down -v
 docker compose up -d --build
 ```
+
+### Cách B — Chạy cục bộ với PostgreSQL
+
+1. Tạo file `.env` từ mẫu, rồi cập nhật `DB_NAME`, `DB_USER`, `DB_PASSWORD` theo PostgreSQL trên máy.
+
+   ```bash
+   # Git Bash
+   cp .env.example .env
+
+   # PowerShell
+   Copy-Item .env.example .env
+   ```
+
+2. Tạo database có tên trùng với `DB_NAME` trong `.env`. Ví dụ nếu dùng tài khoản `postgres`:
+
+   ```bash
+   createdb -U postgres mekong_l5
+   ```
+
+   Hoặc tạo database `mekong_l5` trong pgAdmin. Nếu PostgreSQL yêu cầu mật khẩu, dùng mật khẩu đã đặt khi cài PostgreSQL để điền vào `DB_PASSWORD`.
+
+3. **Terminal 1 — Backend:** cài dependency, tạo bảng, nạp dataset và chạy API.
+
+   ```bash
+   npm ci
+   npm run db:migrate
+   npm run db:seed:dataset -- --reset
+   npm run dev
+   ```
+
+4. **Terminal 2 — Frontend:**
+
+   ```bash
+   cd frontend
+   npm ci
+   npm run dev
+   ```
+
+   Frontend mặc định gọi API tại `http://localhost:3000`, nên không bắt buộc tạo `frontend/.env` nếu dùng đúng địa chỉ này. Nếu API chạy ở địa chỉ khác, tạo file môi trường riêng rồi sửa `VITE_API_BASE_URL`:
+
+   ```bash
+   # Git Bash, đang ở thư mục frontend
+   cp .env.example .env
+
+   # PowerShell, đang ở thư mục frontend
+   Copy-Item .env.example .env
+   ```
+
+Mở `http://localhost:5173`. Giao diện có hai tài khoản demo: **Quản lý trung tâm** (xem tồn, nhập) và **Kỹ thuật viên** (xem tồn, xuất theo phiếu). Đây là token prototype, không dùng cho môi trường thật.
+
+### Kiểm tra dataset Smart CRM cho L5
+
+Repository có sẵn dữ liệu mẫu trong `data/sample/`, đủ liên kết để kiểm thử luồng L5. Có thể kiểm tra liên kết khóa mà không thay đổi cơ sở dữ liệu:
+
+```bash
+npm run db:seed:dataset -- --validate
+```
+
+Tham số `--reset` ở cách chạy cục bộ sẽ thay thế toàn bộ dữ liệu năm bảng L5 trong database đang kết nối.
 
 ## 4. Cấu trúc thư mục
 
@@ -121,5 +167,5 @@ npm run build
 - [x] Logger JSON, `request_id`, che dữ liệu nhạy cảm và middleware lỗi tập trung
 - [x] Docker Compose chạy PostgreSQL, API và frontend từ môi trường sạch
 - [x] Có Bug Log cho lỗi đã sửa và test xác nhận
-- [x] Chạy migration/seed trên PostgreSQL cục bộ; kiểm chứng luồng nhập/xuất qua API thật và lưu [ảnh kết quả xuất kho](docs/screenshots/b10-part-issue-success.jpg)
-- [ ] Clone repository vào thư mục mới và xác minh README chạy lại được
+- [x] Chạy migration/seed trên PostgreSQL cục bộ; kiểm chứng luồng nhập/xuất qua API thật và lưu 
+- [x] Clone repository vào thư mục mới và xác minh README chạy lại được
