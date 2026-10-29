@@ -19,12 +19,24 @@ class StockTransactionService {
     this.ticketPartRepository = ticketPartRepository;
   }
 
-  async listStocks(centerId, { lowOnly = false, keyword = "", page = 1, size = 10 } = {}) {
+  async listStocks(
+    centerId,
+    {
+      lowOnly = false,
+      keyword = "",
+      page = 1,
+      size = 10,
+      sortBy = "part_code",
+      sortDirection = "asc",
+    } = {},
+  ) {
     const { rows, total } = await this.stockRepository.list(centerId, {
       lowOnly,
       keyword,
       page,
       size,
+      sortBy,
+      sortDirection,
     });
     return { items: rows.map(toStockView), page, size, total };
   }

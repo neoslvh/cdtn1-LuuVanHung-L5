@@ -5,8 +5,27 @@ class StockRepository {
     this.pool = pool;
   }
 
-  async list(centerId, { lowOnly = false, keyword = "", page = 1, size = 10 } = {}) {
+  async list(
+    centerId,
+    {
+      lowOnly = false,
+      keyword = "",
+      page = 1,
+      size = 10,
+      sortBy = "part_code",
+      sortDirection = "asc",
+    } = {},
+  ) {
     const offset = (page - 1) * size;
+    const sortableColumns = {
+      part_code: "p.part_code",
+      part_name: "p.part_name",
+      quantity: "ps.quantity",
+      min_threshold: "ps.min_threshold",
+      status: "CASE WHEN ps.quantity < ps.min_threshold THEN 0 ELSE 1 END",
+    };
+    const orderBy = sortableColumns[sortBy] || sortableColumns.part_code;
+    const direction = sortDirection === "desc" ? "DESC" : "ASC";
     const { rows } = await databaseQuery(
       this.pool,
       `SELECT ps.center_id, ps.part_id, p.part_code, p.part_name, ps.quantity, ps.min_threshold,
@@ -16,7 +35,7 @@ class StockRepository {
        WHERE ps.center_id = $1
          AND ($2::boolean = FALSE OR ps.quantity < ps.min_threshold)
          AND ($3 = '' OR p.part_code ILIKE '%' || $3 || '%' OR p.part_name ILIKE '%' || $3 || '%')
-       ORDER BY p.part_code
+       ORDER BY ${orderBy} ${direction}, p.part_id ASC
        LIMIT $4 OFFSET $5`,
       [centerId, lowOnly, keyword, size, offset],
     );

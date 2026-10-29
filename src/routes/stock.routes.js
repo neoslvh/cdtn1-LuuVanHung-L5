@@ -2,6 +2,7 @@ const express = require("express");
 const { validateStockReceipt } = require("../validators/stock-receipt.validator");
 const { validateStockConfigPayload } = require("../validators/stock-config.validator");
 const { validatePagination } = require("../validators/pagination.validator");
+const { validateStockSort } = require("../validators/stock-sort.validator");
 const { requireRole } = require("../middleware/auth-context");
 const { AppError } = require("../errors/AppError");
 
@@ -30,6 +31,7 @@ module.exports = function createStockRoutes(stockTransactionService, stockConfig
 
   router.get("/part-stocks", async (req, res) => {
     const { page, size } = validatePagination(req.query);
+    const { sortBy, sortDirection } = validateStockSort(req.query);
     const lowOnly = String(req.query.low_only || "false").toLowerCase() === "true";
     const keyword = String(req.query.keyword || "").trim();
     const data = await stockTransactionService.listStocks(req.auth.centerId, {
@@ -37,6 +39,8 @@ module.exports = function createStockRoutes(stockTransactionService, stockConfig
       keyword,
       page,
       size,
+      sortBy,
+      sortDirection,
     });
     res.json({ center_id: req.auth.centerId, ...data });
   });
