@@ -7,11 +7,21 @@ export default function InventoryPage({ onNavigate, role, notice, onDismissNotic
   const [lowOnly, setLowOnly] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [stockPage, setStockPage] = useState(1);
+  const [sortBy, setSortBy] = useState("part_code");
+  const [sortDirection, setSortDirection] = useState("asc");
   const [cachedStock, setCachedStock] = useState(null);
   const tableRef = useRef(null);
   const stock = useRequest(
-    () => inventoryApi.listStock({ page: stockPage, size: 10, lowOnly, keyword }),
-    [stockPage, lowOnly, keyword],
+    () =>
+      inventoryApi.listStock({
+        page: stockPage,
+        size: 10,
+        lowOnly,
+        keyword,
+        sortBy,
+        sortDirection,
+      }),
+    [stockPage, lowOnly, keyword, sortBy, sortDirection],
   );
   const alerts = useRequest(
     () =>
@@ -27,11 +37,29 @@ export default function InventoryPage({ onNavigate, role, notice, onDismissNotic
   const displayedStock = stock.data || cachedStock;
   const shown = displayedStock?.items || [];
   const isRefreshing = stock.loading && Boolean(displayedStock);
+  const pageError = stock.error || alerts.error;
+  const hasBlockingStockError = Boolean(stock.error && !displayedStock);
+
+  function retryFailedRequests() {
+    if (stock.error) stock.reload();
+    if (alerts.error) alerts.reload();
+  }
+
   function showLowStockList() {
     setKeyword("");
     setLowOnly(true);
     setStockPage(1);
     setTimeout(() => tableRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
+  }
+
+  function changeSort(nextSortBy) {
+    if (nextSortBy === sortBy) {
+      setSortDirection((current) => (current === "asc" ? "desc" : "asc"));
+    } else {
+      setSortBy(nextSortBy);
+      setSortDirection("asc");
+    }
+    setStockPage(1);
   }
   return (
     <section className="inventory-panel">
@@ -46,10 +74,10 @@ export default function InventoryPage({ onNavigate, role, notice, onDismissNotic
       {role === "CENTER_MANAGER" && alerts.loading && (
         <p className="state">Đang kiểm tra cảnh báo tồn thấp…</p>
       )}
-      {role === "CENTER_MANAGER" && alerts.error && (
+      {pageError && (
         <div className="state error">
-          <p>Không tải được cảnh báo: {alerts.error.message}</p>
-          <button type="button" onClick={alerts.reload}>
+          <p>{pageError.message}</p>
+          <button type="button" onClick={retryFailedRequests}>
             Thử lại
           </button>
         </div>
@@ -98,9 +126,10 @@ export default function InventoryPage({ onNavigate, role, notice, onDismissNotic
           <span />
         )}
       </div>
-      <DataState
+      {!hasBlockingStockError && <DataState
         {...stock}
         data={displayedStock}
+        error={null}
         emptyMessage={
           lowOnly || keyword.trim()
             ? "Không có linh kiện phù hợp bộ lọc."
@@ -119,11 +148,41 @@ export default function InventoryPage({ onNavigate, role, notice, onDismissNotic
                     <th colSpan="5">Danh sách linh kiện</th>
                   </tr>
                   <tr>
-                    <th>Mã</th>
-                    <th>Tên linh kiện</th>
-                    <th>Tồn</th>
-                    <th>Ngưỡng</th>
-                    <th>Trạng thái</th>
+                    <SortableHeader
+                      label="Mã"
+                      sortKey="part_code"
+                      activeSortBy={sortBy}
+                      direction={sortDirection}
+                      onSort={changeSort}
+                    />
+                    <SortableHeader
+                      label="Tên linh kiện"
+                      sortKey="part_name"
+                      activeSortBy={sortBy}
+                      direction={sortDirection}
+                      onSort={changeSort}
+                    />
+                    <SortableHeader
+                      label="Tồn"
+                      sortKey="quantity"
+                      activeSortBy={sortBy}
+                      direction={sortDirection}
+                      onSort={changeSort}
+                    />
+                    <SortableHeader
+                      label="Ngưỡng"
+                      sortKey="min_threshold"
+                      activeSortBy={sortBy}
+                      direction={sortDirection}
+                      onSort={changeSort}
+                    />
+                    <SortableHeader
+                      label="Trạng thái"
+                      sortKey="status"
+                      activeSortBy={sortBy}
+                      direction={sortDirection}
+                      onSort={changeSort}
+                    />
                   </tr>
                 </thead>
                 <tbody>
@@ -159,8 +218,33 @@ export default function InventoryPage({ onNavigate, role, notice, onDismissNotic
             </>
           )
         }
-      </DataState>
+      </DataState>}
     </section>
+  );
+}
+
+function SortableHeader({ label, sortKey, activeSortBy, direction, onSort }) {
+  const isActive = activeSortBy === sortKey;
+  const ariaSort = isActive ? (direction === "asc" ? "ascending" : "descending") : "none";
+
+  return (
+    <th aria-sort={ariaSort}>
+      <button
+        type="button"
+        className={`inventory-sort-button${isActive ? " active" : ""}`}
+        onClick={() => onSort(sortKey)}
+        aria-label={`Sắp xếp theo ${label}${isActive ? `, hiện tại ${direction === "asc" ? "tăng dần" : "giảm dần"}` : ""}`}
+      >
+        <span>{label}</span>
+        <span
+          aria-hidden="true"
+          className={`sort-indicator${isActive ? ` ${direction}` : ""}`}
+        >
+          <span>▲</span>
+          <span>▼</span>
+        </span>
+      </button>
+    </th>
   );
 }
 

@@ -3,9 +3,16 @@ import { request } from "./client";
 export const inventoryApi = {
   login: (role) =>
     request("/api/auth/demo-login", { method: "POST", body: JSON.stringify({ role }) }),
-  listStock: ({ page = 1, size = 10, lowOnly = false, keyword = "" } = {}) =>
+  listStock: ({
+    page = 1,
+    size = 10,
+    lowOnly = false,
+    keyword = "",
+    sortBy = "part_code",
+    sortDirection = "asc",
+  } = {}) =>
     request(
-      `/api/part-stocks?page=${page}&size=${size}&low_only=${lowOnly}&keyword=${encodeURIComponent(keyword)}`,
+      `/api/part-stocks?page=${page}&size=${size}&low_only=${lowOnly}&keyword=${encodeURIComponent(keyword)}&sort_by=${sortBy}&sort_direction=${sortDirection}`,
     ),
   listAlerts: ({ page = 1, size = 10 } = {}) =>
     request(`/api/stock-alerts?page=${page}&size=${size}`),

@@ -114,6 +114,44 @@ td {
 
 .inventory-table thead tr:not(.table-title) th { font-weight: 600; text-align: center; }
 
+.inventory-sort-button {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+.inventory-sort-button:hover,
+.inventory-sort-button.active {
+  color: #1f5d85;
+  background: transparent;
+}
+
+.sort-indicator {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 1px;
+  align-items: center;
+  width: 8px;
+  color: #9aa8b6;
+  font-size: 7px;
+  line-height: 6px;
+}
+
+.sort-indicator.asc span:first-child,
+.sort-indicator.desc span:last-child { color: #1f5d85; }
+
+.sort-indicator.asc span:last-child,
+.sort-indicator.desc span:first-child { color: #c7d0d9; }
+
 .inventory-table .table-title th {
   padding: 6px;
   font-weight: 500;
