@@ -145,7 +145,7 @@ frontend/src/components/  Thành phần dùng lại, gồm DataState và FormMes
 npm test
 ```
 
-Kết quả hiện tại: 23 unit test PASS cho service, validation, logger và hợp đồng dữ liệu tồn kho.
+Kết quả hiện tại: 27 unit test PASS cho service, validation, logger và hợp đồng dữ liệu tồn kho.
 
 Kiểm tra bản build frontend:
 
