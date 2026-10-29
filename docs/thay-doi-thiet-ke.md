@@ -30,15 +30,10 @@
 - Lý do: Cam kết cần có mốc thời gian để xác định thời điểm sinh viên xác nhận trách nhiệm về nội dung nộp.
 - Ảnh hưởng: Thêm dòng “Ngày cam kết: 09/10/2026” trong `docs/ai-disclosure.md` và phụ lục AI của báo cáo BT1 đã cập nhật.
 
-### TD-05 — Xác thực demo cho luồng giao diện Sprint 2
+### TD-05 — Quy ước ngưỡng tồn tối thiểu phải lớn hơn 0
 
-- Phản hồi/yêu cầu giai đoạn: Buổi 9–10 yêu cầu giao diện gọi API thật, có xử lý phản hồi `401` và không ghi cứng token trong mã nguồn.
-- Quyết định: SỬA — dùng endpoint đăng nhập demo để cấp token theo hai vai trò `CENTER_MANAGER` và `TECHNICIAN`; frontend chỉ lưu token sau khi người dùng chọn vai trò và xoá token khi nhận `401`.
-- Lý do: L5 không thuộc phạm vi xây dựng hệ thống xác thực hoàn chỉnh, nhưng vẫn cần kiểm chứng phân quyền quản lý/kỹ thuật viên và hành vi khi phiên hết hạn.
-- Ảnh hưởng: Thêm `src/middleware/auth-context.js`, `/api/auth/demo-login`, kiểm tra quyền ở API nhập/xuất/cảnh báo, cùng lớp `frontend/src/api/client.js`. Token demo chỉ dùng cục bộ, không dùng cho môi trường thật.
+- Phản hồi/vấn đề phát hiện: Nếu cho phép `min_threshold = 0`, điều kiện cảnh báo `quantity < min_threshold` không cảnh báo khi linh kiện hết hàng (`quantity = 0`); điều này mâu thuẫn với AC5.3, trong khi AC5.2 lại yêu cầu tồn bằng ngưỡng không cảnh báo.
+- Quyết định: SỬA — ràng buộc `min_threshold > 0` cho mọi bản ghi tồn kho.
+- Lý do: Khi ngưỡng là số nguyên dương, linh kiện hết hàng luôn thỏa `0 < min_threshold` và được cảnh báo theo AC5.3; đồng thời quy tắc “tồn bằng ngưỡng không cảnh báo” của AC5.2 vẫn nhất quán.
+- Ảnh hưởng: Đồng bộ kiểu dữ liệu `min_threshold` là số nguyên dương trong từ điển dữ liệu SRS, `CHECK (min_threshold > 0)` ở `db/schema.sql` và migration `001_create_l5_schema.sql`; script nạp dataset cũng từ chối ngưỡng không hợp lệ.
 
-## Kiểm tra nhất quán sau điều chỉnh
-
-- SRS, ERD, kiến trúc, wireframe và DDL đều dùng thống nhất năm bảng: `part`, `part_stock`, `part_transaction`, `ticket`, `ticket_part`.
-- `ticket_part.quantity_used` là dữ liệu tổng hợp theo phiếu và linh kiện; `part_transaction` là lịch sử giao dịch, trong đó giao dịch `OUT` bắt buộc gắn với `ticket_id`.
-- Phạm vi L5 không quản lý vòng đời phiếu bảo hành; `ticket` chỉ là bảng tham chiếu tối thiểu để bảo đảm liên kết xuất linh kiện hợp lệ.
