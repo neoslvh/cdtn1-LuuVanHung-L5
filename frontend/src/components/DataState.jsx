@@ -1,5 +1,5 @@
 export default function DataState({ loading, error, data, emptyMessage, onRetry, children }) {
-  if (loading) return <p className="state">Đang tải dữ liệu…</p>;
+  if (loading && !data) return <p className="state">Đang tải dữ liệu…</p>;
   if (error)
     return (
       <div className="state error">

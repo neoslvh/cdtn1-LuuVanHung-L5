@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { inventoryApi } from "../api/inventory.api";
 import DataState from "../components/DataState";
 import { useRequest } from "../hooks/useRequest";
@@ -7,6 +7,7 @@ export default function InventoryPage({ onNavigate, role, notice, onDismissNotic
   const [lowOnly, setLowOnly] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [stockPage, setStockPage] = useState(1);
+  const [cachedStock, setCachedStock] = useState(null);
   const tableRef = useRef(null);
   const stock = useRequest(
     () => inventoryApi.listStock({ page: stockPage, size: 10, lowOnly, keyword }),
@@ -19,7 +20,13 @@ export default function InventoryPage({ onNavigate, role, notice, onDismissNotic
         : Promise.resolve({ items: [], total: 0, page: 1, size: 1 }),
     [role],
   );
-  const shown = stock.data?.items || [];
+  useEffect(() => {
+    if (stock.data) setCachedStock(stock.data);
+  }, [stock.data]);
+
+  const displayedStock = stock.data || cachedStock;
+  const shown = displayedStock?.items || [];
+  const isRefreshing = stock.loading && Boolean(displayedStock);
   function showLowStockList() {
     setKeyword("");
     setLowOnly(true);
@@ -93,16 +100,20 @@ export default function InventoryPage({ onNavigate, role, notice, onDismissNotic
       </div>
       <DataState
         {...stock}
-        data={stock.data?.items}
-        emptyMessage="Chưa có linh kiện tồn kho tại trung tâm."
+        data={displayedStock}
+        emptyMessage={
+          lowOnly || keyword.trim()
+            ? "Không có linh kiện phù hợp bộ lọc."
+            : "Chưa có linh kiện tồn kho tại trung tâm."
+        }
         onRetry={stock.reload}
       >
-        {() =>
+        {(data) =>
           !shown.length ? (
             <p className="state">Không có linh kiện phù hợp bộ lọc.</p>
           ) : (
             <>
-              <table className="inventory-table" ref={tableRef}>
+              <table className="inventory-table" ref={tableRef} aria-busy={isRefreshing}>
                 <thead>
                   <tr className="table-title">
                     <th colSpan="5">Danh sách linh kiện</th>
@@ -116,7 +127,10 @@ export default function InventoryPage({ onNavigate, role, notice, onDismissNotic
                   </tr>
                 </thead>
                 <tbody>
-                  {shown.map((item) => (
+                  {isRefreshing ? (
+                    <InventorySkeletonRows />
+                  ) : (
+                    shown.map((item) => (
                     <tr
                       key={item.part_id}
                       className={item.status === "LOW_STOCK" ? "low-stock-row" : ""}
@@ -137,10 +151,11 @@ export default function InventoryPage({ onNavigate, role, notice, onDismissNotic
                         </span>
                       </td>
                     </tr>
-                  ))}
+                    ))
+                  )}
                 </tbody>
               </table>
-              <PageControls data={stock.data} onChange={setStockPage} />
+              <PageControls data={data} onChange={setStockPage} loading={isRefreshing} />
             </>
           )
         }
@@ -149,7 +164,19 @@ export default function InventoryPage({ onNavigate, role, notice, onDismissNotic
   );
 }
 
-function PageControls({ data, onChange, label = "linh kiện" }) {
+function InventorySkeletonRows() {
+  return Array.from({ length: 10 }, (_, index) => (
+    <tr className="skeleton-row" key={index}>
+      {Array.from({ length: 5 }, (_, cellIndex) => (
+        <td key={cellIndex}>
+          <span className="skeleton-cell" />
+        </td>
+      ))}
+    </tr>
+  ));
+}
+
+function PageControls({ data, onChange, loading = false, label = "linh kiện" }) {
   const lastPage = Math.max(1, Math.ceil(data.total / data.size));
   const firstItem = (data.page - 1) * data.size + 1;
   const lastItem = Math.min(data.page * data.size, data.total);
@@ -159,17 +186,19 @@ function PageControls({ data, onChange, label = "linh kiện" }) {
       <button
         type="button"
         className="cancel-button"
-        disabled={data.page <= 1}
+        disabled={loading || data.page <= 1}
         onClick={() => onChange(data.page - 1)}
       >
         Trang trước
       </button>
       <span>
-        Hiển thị {firstItem}-{lastItem}/{data.total} {label} · Trang {data.page}/{lastPage}
+        {loading
+          ? "Đang cập nhật danh sách…"
+          : `Hiển thị ${firstItem}-${lastItem}/${data.total} ${label} · Trang ${data.page}/${lastPage}`}
       </span>
       <button
         type="button"
-        disabled={data.page >= lastPage || data.items.length < data.size}
+        disabled={loading || data.page >= lastPage || data.items.length < data.size}
         onClick={() => onChange(data.page + 1)}
       >
         Trang sau

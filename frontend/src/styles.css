@@ -121,6 +121,23 @@ td {
   background: #d5e5f1;
 }
 
+.skeleton-row td { height: 40px; }
+
+.skeleton-cell {
+  display: block;
+  width: 82%;
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #e8edf2 25%, #f5f7f9 50%, #e8edf2 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.2s ease-in-out infinite;
+}
+
+@keyframes skeleton-loading {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
 .state { padding: 14px; margin-top: 16px; background: #eef2f6; border-radius: 6px; }
 .error { color: #97261f; background: #ffe7e5; }
 .success { padding: 12px; margin-top: 16px; color: #155b37; background: #e2f5e9; border-radius: 6px; }
@@ -202,6 +219,13 @@ td {
 
 .history-heading label { width: min(100%, 620px); }
 .history-heading .state { margin: 0; }
+.history-heading h2 { margin: 0 0 6px; }
+.history-heading p { margin: 0; color: #526476; }
+
+.history-stock-table .selectable-row { cursor: pointer; }
+.history-stock-table .selectable-row:hover { background: #edf6fd; }
+.history-stock-table .selectable-row.selected-row { background: #dcecf8; }
+.history-stock-table .selectable-row:focus { outline: 2px solid #2d739f; outline-offset: -2px; }
 .receipt-panel form,
 .issue-form { width: 100%; max-width: none; }
 

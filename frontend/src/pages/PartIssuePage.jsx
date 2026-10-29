@@ -166,9 +166,6 @@ export default function PartIssuePage() {
                         ))}
                       </select>
                     </label>
-                    <p className="stock-readonly">
-                      Tồn hiện tại: <strong>{selected ? selected.quantity : "—"}</strong>
-                    </p>
                   </div>
                   <div className="issue-row">
                     <label>
