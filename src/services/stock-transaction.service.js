@@ -11,12 +11,14 @@ class StockTransactionService {
     transactionRepository,
     ticketRepository,
     ticketPartRepository,
+    clock = () => new Date(),
   ) {
     this.pool = pool;
     this.stockRepository = stockRepository;
     this.transactionRepository = transactionRepository;
     this.ticketRepository = ticketRepository;
     this.ticketPartRepository = ticketPartRepository;
+    this.clock = clock;
   }
 
   async listStocks(
@@ -163,7 +165,7 @@ class StockTransactionService {
         ticket_code: ticket.ticket_code,
         issues,
         low_stock_alerts: lowStockAlerts,
-        created_at: new Date().toISOString(),
+        created_at: this.clock().toISOString(),
       };
     } catch (error) {
       await client.query("ROLLBACK");

@@ -81,12 +81,14 @@ test("xuất đúng bằng tồn được chấp nhận và tạo cảnh báo kh
     transactionRepository,
     ticketRepository,
     ticketPartRepository,
+    () => new Date("2026-11-05T09:00:00.000Z"),
   );
 
   const result = await service.issue(1, 7, { items: [{ partId: 1, quantity: 2 }] });
 
   assert.equal(result.issues[0].stock_after, 0);
   assert.equal(result.low_stock_alerts.length, 1);
+  assert.equal(result.created_at, "2026-11-05T09:00:00.000Z");
   assert.deepEqual(queries, ["BEGIN", "COMMIT"]);
 });
 

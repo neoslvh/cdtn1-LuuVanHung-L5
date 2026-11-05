@@ -1,0 +1,40 @@
+@baseUrl = http://localhost:3000
+@managerToken = demo-manager
+@technicianToken = demo-technician
+
+### Health check
+GET {{baseUrl}}/health
+
+### TC-02 - Nhap kho: so luong bang 0 phai bi tu choi
+POST {{baseUrl}}/api/stock-receipts
+Authorization: Bearer {{managerToken}}
+Content-Type: application/json
+
+{
+  "part_id": 1,
+  "quantity": 0
+}
+
+### TC-03 - Nhap kho: thieu linh kien phai bi tu choi
+POST {{baseUrl}}/api/stock-receipts
+Authorization: Bearer {{managerToken}}
+Content-Type: application/json
+
+{
+  "quantity": 1
+}
+
+### TC-04 - Xem ton kho cua trung tam dang nhap
+GET {{baseUrl}}/api/part-stocks?page=1&size=10
+Authorization: Bearer {{managerToken}}
+
+### TC-05 - Kiem tra ton truoc khi xuat
+GET {{baseUrl}}/api/parts/1/availability?requested_quantity=1
+Authorization: Bearer {{technicianToken}}
+
+### TC-11 - Phan trang khong hop le phai bi tu choi
+GET {{baseUrl}}/api/part-stocks?page=0&size=101
+Authorization: Bearer {{managerToken}}
+
+### OWASP A07 - Khong gui token phai tra 401
+GET {{baseUrl}}/api/part-stocks
