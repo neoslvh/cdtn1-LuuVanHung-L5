@@ -10,9 +10,12 @@
   "scripts": {
     "dev": "node src/server.js",
     "test": "node --test",
+    "test:integration": "node --test tests/stock-concurrency.integration.js",
+    "test:all": "npm test && npm run test:integration && npm run db:verify:repeatable",
     "db:migrate": "node src/scripts/migrate.js",
     "db:seed": "node src/scripts/seed.js",
-    "db:seed:dataset": "node src/scripts/seed-dataset.js"
+    "db:seed:dataset": "node src/scripts/seed-dataset.js",
+    "db:verify:repeatable": "node src/scripts/verify-seed-repeatability.js"
   },
   "repository": {
     "type": "git",

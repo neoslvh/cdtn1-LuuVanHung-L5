@@ -172,10 +172,18 @@ async function main() {
     const { rows } = await pool.query(
       "SELECT (SELECT COUNT(*) FROM part) AS part_count, (SELECT COUNT(*) FROM ticket) AS ticket_count",
     );
-    if (Number(rows[0].part_count) > 0 || Number(rows[0].ticket_count) > 0) {
+    const partCount = Number(rows[0].part_count);
+    const ticketCount = Number(rows[0].ticket_count);
+    if (partCount > 0 && ticketCount > 0) {
       logger.info("dataset_seed_skipped", { reason: "database_not_empty" });
       await pool.end();
       return;
+    }
+    if (partCount > 0 || ticketCount > 0) {
+      await pool.end();
+      throw new Error(
+        "CSDL chứa dữ liệu L5 chưa đầy đủ. Chạy db:seed:dataset -- --reset để nạp lại nhất quán.",
+      );
     }
   }
 
