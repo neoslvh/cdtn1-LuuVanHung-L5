@@ -11,9 +11,10 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY package.json ./
 COPY src ./src
 COPY tests ./tests
+COPY migrations ./migrations
 COPY data/sample ./data/sample
 USER app
 EXPOSE 3000
 HEALTHCHECK --interval=10s --timeout=3s --start-period=20s --retries=6 \
-  CMD node -e "fetch('http://localhost:3000/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"
-CMD ["node", "src/server.js"]
+  CMD node -e "fetch('http://localhost:' + (process.env.PORT || process.env.API_PORT || 3000) + '/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"
+CMD ["/bin/sh", "-c", "npm run db:migrate && npm run db:seed:dataset -- --if-empty && node src/server.js"]
