@@ -66,6 +66,19 @@ test("API khong co token tra 401 va khong lo stack trace", async () => {
   assert.doesNotMatch(bodyText, /stack|postgres|database_url|connection string/);
 });
 
+test("API token khong hop le tra 401 va thong bao an toan", async () => {
+  const response = await callApi({
+    method: "GET",
+    path: "/api/part-stocks",
+    token: "token-khong-hop-le",
+  });
+  const bodyText = JSON.stringify(response.body).toLowerCase();
+
+  assert.equal(response.status, 401);
+  assert.equal(response.body.error.code, "UNAUTHORIZED");
+  assert.doesNotMatch(bodyText, /stack|postgres|database_url|connection string/);
+});
+
 test("API tu choi quan ly xuat linh kien voi 403", async () => {
   const response = await callApi({
     method: "POST",

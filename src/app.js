@@ -35,11 +35,12 @@ function buildApp(pool) {
   app.use(requestContext);
   app.use(express.json({ limit: "256kb" }));
   app.use((req, res, next) => {
-    const allowedOrigins = [
-      process.env.FRONTEND_ORIGIN,
-      "http://localhost:5173",
-      "http://127.0.0.1:5173",
-    ].filter(Boolean);
+    const allowedOrigins = String(
+      process.env.CORS_ORIGINS || "http://localhost:5173,http://127.0.0.1:5173",
+    )
+      .split(",")
+      .map((value) => value.trim())
+      .filter(Boolean);
     const origin = req.get("origin");
     if (origin && allowedOrigins.includes(origin))
       res.setHeader("Access-Control-Allow-Origin", origin);
