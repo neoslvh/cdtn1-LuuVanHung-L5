@@ -13,7 +13,7 @@ Hệ thống hỗ trợ quản lý trung tâm theo dõi tồn kho linh kiện th
 
 - Cách khuyến nghị: Docker Desktop đang chạy.
 - Nếu chạy cục bộ: Node.js 20 LTS, npm 10 và PostgreSQL 16+.
-- Biến môi trường backend: xem `.env.example` (`DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_PORT`, `API_PORT`, `LOG_LEVEL`).
+- Biến môi trường backend: xem `.env.example` (`DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_PORT`, `API_PORT`, `LOG_LEVEL`, `CORS_ORIGINS`).
 - Với Docker Compose, frontend nhận địa chỉ API từ `PUBLIC_API_URL` trong `.env` ở thư mục gốc.
 - Khi chạy frontend cục bộ và cần đổi API, xem `frontend/.env.example` (`VITE_API_BASE_URL`).
 
@@ -145,7 +145,25 @@ frontend/src/components/  Thành phần dùng lại, gồm DataState và FormMes
 npm test
 ```
 
-Kết quả hiện tại: 34 test PASS cho service, validation, logger, hợp đồng dữ liệu tồn kho và phản hồi HTTP API.
+Kết quả hiện tại: 36 test PASS cho service, validation, logger, bảo mật truy vấn, hợp đồng dữ liệu tồn kho và phản hồi HTTP API.
+
+Kiểm thử integration PostgreSQL cho hai yêu cầu xuất đồng thời (dùng CSDL cấu hình trong `.env` và tự xóa dữ liệu fixture sau khi xong):
+
+```bash
+npm run test:integration
+```
+
+Chạy toàn bộ unit/API test, integration test và kiểm chứng seed tái lập (TC-11) bằng một lệnh:
+
+```bash
+npm run test:all
+```
+
+Kiểm tra riêng seed chạy lại không nhân đôi dữ liệu (C8/TC-11), khi cần:
+
+```bash
+npm run db:verify:repeatable
+```
 
 Kiểm tra bản build frontend:
 
