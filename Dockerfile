@@ -10,6 +10,7 @@ RUN addgroup -S app && adduser -S app -G app
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY package.json ./
 COPY src ./src
+COPY tests ./tests
 COPY data/sample ./data/sample
 USER app
 EXPOSE 3000
