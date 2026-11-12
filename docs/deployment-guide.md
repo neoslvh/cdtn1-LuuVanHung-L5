@@ -89,3 +89,40 @@ Open `http://localhost:5173`, sign in with a demo role, and confirm that the inv
 - If a host port is busy, change `API_PORT` or `WEB_PORT` in `.env`, then run `docker compose up -d --build` again.
 - To recreate all Docker data from the sample CSV files, run `docker compose down -v` followed by `docker compose up -d --build`.
 - For API logs, run `docker compose logs api --tail 50` and use the `request_id` in a returned error response.
+
+## 6. Render deployment
+
+The production demonstration uses only Render: one **PostgreSQL** database, one **Web Service** for the Express API, and one **Static Site** for the React frontend. Keep all three services in the same Render region where that option is available.
+
+### API and database
+
+1. In Render, create a PostgreSQL database and copy its **Internal Database URL**.
+2. Create a Web Service from the repository, branch `main`, with runtime **Docker** and Dockerfile path `./Dockerfile`.
+3. Set health-check path to `/health` and configure these environment variables on the Web Service:
+
+   | Name | Value |
+   | --- | --- |
+   | `DATABASE_URL` | Internal Database URL copied in step 1 |
+   | `CORS_ORIGINS` | Exact public URL of the Render Static Site, for example `https://l5-inventory.onrender.com` |
+   | `LOG_LEVEL` | `info` |
+   | `DB_POOL_MAX` | `10` |
+
+The API image runs the idempotent migration and seeds the dataset only when the database is empty before starting the server. Do not enter `DB_PASSWORD`, `DB_USER`, or `DB_NAME` when `DATABASE_URL` is configured.
+
+### Frontend
+
+1. Create a Render Static Site from the same repository and branch `main`.
+2. Set **Root Directory** to `frontend`, **Build Command** to `npm ci && npm run build`, and **Publish Directory** to `dist`.
+3. Before the first deploy, add this build environment variable:
+
+   | Name | Value |
+   | --- | --- |
+   | `VITE_API_BASE_URL` | Public URL of the API Web Service, for example `https://l5-api.onrender.com` |
+
+4. Copy the resulting Static Site URL to `CORS_ORIGINS` in the API service, then redeploy the API once.
+
+### Verify the public deployment
+
+Open `<API_URL>/health`; it must return JSON with `"status":"ok"` and `"db":"ok"`. Then open the Static Site URL, sign in with either demo role, and confirm that the inventory list is loaded.
+
+For the free Render plan, the API Web Service can spin down after 15 minutes without requests. The first request after that may take about one minute while the service starts again. Before demonstration or grading, open the API health URL and wait for it to return successfully.
