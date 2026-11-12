@@ -18,8 +18,8 @@ Chủ ý **không kiểm**: tải hiệu năng 10.000 bản ghi, bảo mật xâ
 | Tầng / loại | Số lượng trong Test Report | Kỹ thuật và phạm vi |
 | --- | ---: | --- |
 | Unit test service/validator | 7 | Kiểm quy tắc nhập, xuất, rollback, cảnh báo, dữ liệu đầu vào bằng `node:test`. |
-| Integration test PostgreSQL | 2 | Chạy migration/seed lặp lại và kiểm tác dụng phụ dữ liệu kho. |
-| API/UI test | 3 | Kiểm phản hồi lỗi, xác thực và giới hạn dữ liệu theo trung tâm qua API hoặc giao diện. |
+| Integration test PostgreSQL / seed | 3 | Kiểm phạm vi trung tâm, hai yêu cầu xuất đồng thời và seed chạy lại không nhân đôi dữ liệu. |
+| API/UI test | 2 | Kiểm phản hồi lỗi dữ liệu sai qua API. |
 
 Kỹ thuật chọn dữ liệu: phân vùng tương đương cho dữ liệu hợp lệ/không hợp lệ; giá trị biên tại `quantity = min_threshold` và `quantity_requested = quantity`; kiểm tra tác dụng phụ trước/sau giao dịch.
 
@@ -27,17 +27,18 @@ Mười hai test case được phân bố đủ năm loại bắt buộc:
 
 - Luồng đúng: TC-01, TC-04, TC-09.
 - Giá trị biên: TC-04, TC-05, TC-07.
-- Dữ liệu sai: TC-02, TC-03, TC-11.
+- Dữ liệu sai: TC-02, TC-03.
 - Bảo mật/chất lượng dữ liệu: TC-08, TC-10.
-- Tính tái lập: TC-12.
+- Tính tái lập: TC-11 (chạy seed hai lần trên cùng một CSDL và so sánh số bản ghi).
+- Đồng thời/NFR1: TC-12.
 
 ## 3. Tiêu chí thành công đo được
 
 - Có 12 test case với đủ tám cột; mỗi quy tắc BR1–BR4 đã hiện thực có ít nhất một test luồng đúng hoặc vi phạm.
 - Toàn bộ test case được chạy thật, có kết quả thực tế, ảnh minh chứng và trạng thái PASS/FAIL trung thực.
-- Lệnh `npm test` PASS toàn bộ test tự động.
+- Lệnh `npm run test:all` PASS toàn bộ unit/API test, integration test và TC-11 kiểm chứng seed tái lập.
 - Không còn bug Critical đang mở; bug Major còn lại (nếu có) phải có lý do và hướng xử lý trong Bug Log.
-- Migration và seed chạy lại lần hai không lỗi, không làm nhân đôi dữ liệu.
+- TC-11 chạy `npm run db:verify:repeatable`; seed chạy lại lần hai không lỗi, không làm nhân đôi dữ liệu.
 
 ## 4. Môi trường và dữ liệu thử
 
